@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+---
+
+<header class="fixed w-full top-0 z-50 bg-light_blue-200/90 backdrop-blur-xl border-b border-light_blue-300 shadow-md">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-20">
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <a href="/" class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded bg-light_blue-400 flex items-center justify-center shadow">
+            <span class="text-light_blue-900 font-bold text-2xl">T</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-light_blue-900 font-bold text-xl">Top Ads</span>
+            <span class="text-light_blue-700 text-sm">Premium Marketing</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navegación -->
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="#services" class="text-light_blue-900 hover:text-light_blue-700 transition-colors duration-300 text-sm uppercase tracking-wider font-semibold">
+          Servicios
+        </a>
+        <a href="#accounts" class="text-light_blue-900 hover:text-light_blue-700 transition-colors duration-300 text-sm uppercase tracking-wider font-semibold">
+          Cuentas Premium
+        </a>
+        <a href="#solutions" class="text-light_blue-900 hover:text-light_blue-700 transition-colors duration-300 text-sm uppercase tracking-wider font-semibold">
+          Soluciones
+        </a>
+        <a href="#faq" class="text-light_blue-900 hover:text-light_blue-700 transition-colors duration-300 text-sm uppercase tracking-wider font-semibold">
+          FAQ
+        </a>
+      </nav>
+
+      <!-- CTA -->
+      <div class="flex items-center space-x-6">
+        <a
+          href="#contact"
+          class="relative group"
+        >
+          <span class="absolute inset-0 bg-light_blue-400 rounded-lg blur-lg opacity-40 group-hover:opacity-70 transition-opacity duration-300"></span>
+          <span class="relative inline-flex items-center px-6 py-2.5 rounded-lg bg-light_blue-400 text-light_blue-900 font-semibold shadow
+                       transform hover:-translate-y-0.5 transition-all duration-300">
+            <span>Conectar Ahora</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 animate-pulse-slow" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header> 

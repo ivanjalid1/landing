@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import Services from '../components/Services.astro';
+import Accounts from '../components/Accounts.astro';
+import Testimonials from '../components/Testimonials.astro';
+import FAQ from '../components/FAQ.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+
+const seoTitle = 'Top Ads - Servicios Premium de Marketing Digital';
+const seoDescription = 'Potencia tus campañas publicitarias con nuestras cuentas premium verificadas y servicios de marketing digital de alto rendimiento. ROI garantizado.';
+---
+
+<Layout title={seoTitle} description={seoDescription}>
+  <main>
+    <Hero />
+    <Services />
+    <Accounts />
+    <Testimonials />
+    <FAQ />
+    <FinalCTA />
+  </main>
+</Layout> 

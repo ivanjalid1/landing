@@ -1,0 +1,286 @@
+---
+const solutions = [
+  {
+    title: "API Integration",
+    description: "Acceso directo a APIs de Facebook, Instagram y TikTok para automatización completa de campañas y gestión programática.",
+    features: [
+      "Webhooks en tiempo real",
+      "Rate limiting inteligente",
+      "Bulk operations",
+      "Custom audiences automáticas",
+      "Cross-platform sync"
+    ],
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+    </svg>`,
+    specs: {
+      label: "Uptime",
+      value: "99.9%",
+      detail: "SLA garantizado"
+    },
+    color: "from-blue-500 to-cyan-500"
+  },
+  {
+    title: "White Label Solution",
+    description: "Infraestructura completa para agencias que quieren escalar sin límites con su propia marca.",
+    features: [
+      "Custom domains",
+      "Branded interfaces",
+      "Multi-tenant architecture",
+      "Revenue sharing",
+      "White label support"
+    ],
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
+    </svg>`,
+    specs: {
+      label: "Agencias",
+      value: "50+",
+      detail: "Activas"
+    },
+    color: "from-purple-500 to-pink-500"
+  },
+  {
+    title: "Advanced Analytics",
+    description: "Dashboard empresarial con métricas avanzadas, predicciones de ROI y optimización automática con IA.",
+    features: [
+      "Predictive analytics",
+      "Custom attribution models",
+      "Real-time reporting",
+      "A/B testing automático",
+      "ROI forecasting"
+    ],
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+    </svg>`,
+    specs: {
+      label: "Precisión",
+      value: "95%",
+      detail: "Predictions"
+    },
+    color: "from-green-500 to-emerald-500"
+  },
+  {
+    title: "Enterprise Security",
+    description: "Infraestructura enterprise-grade con encriptación end-to-end, compliance GDPR y auditorías de seguridad.",
+    features: [
+      "SOC 2 Type II",
+      "GDPR compliance",
+      "End-to-end encryption",
+      "Vulnerability scanning",
+      "Penetration testing"
+    ],
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+    </svg>`,
+    specs: {
+      label: "Security Score",
+      value: "A+",
+      detail: "SSL Labs"
+    },
+    color: "from-red-500 to-orange-500"
+  },
+  {
+    title: "Scalable Infrastructure",
+    description: "Arquitectura cloud-native que maneja millones de requests con auto-scaling y redundancia geográfica.",
+    features: [
+      "Auto-scaling clusters",
+      "Geographic redundancy",
+      "Load balancing",
+      "CDN global",
+      "99.99% uptime"
+    ],
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+    </svg>`,
+    specs: {
+      label: "Throughput",
+      value: "1M+",
+      detail: "req/sec"
+    },
+    color: "from-indigo-500 to-purple-500"
+  },
+  {
+    title: "Custom Development",
+    description: "Desarrollo a medida de integraciones, automatizaciones y herramientas específicas para tu workflow.",
+    features: [
+      "Custom integrations",
+      "Workflow automation",
+      "Third-party APIs",
+      "Custom reporting",
+      "Dedicated support"
+    ],
+    icon: `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+    </svg>`,
+    specs: {
+      label: "Projects",
+      value: "200+",
+      detail: "Delivered"
+    },
+    color: "from-yellow-500 to-orange-500"
+  }
+];
+---
+
+<section class="relative py-24 overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50" id="solutions">
+  <!-- Background Elements -->
+  <div class="absolute inset-0">
+    <div class="absolute top-0 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/5 rounded-full blur-2xl"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header Section -->
+    <div class="text-center mb-20 animate-fade-in">
+      <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 mb-6">
+        <span class="w-2 h-2 bg-gradient-to-r from-purple-400 to-emerald-400 rounded-full mr-2 animate-pulse"></span>
+        <span class="text-slate-700 text-sm font-medium">Soluciones Enterprise</span>
+      </div>
+      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
+        Tecnología <span class="bg-gradient-to-r from-purple-500 to-emerald-500 bg-clip-text text-transparent">Enterprise</span>
+      </h2>
+      <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+        Infraestructura de nivel empresarial para agencias y profesionales que necesitan escalar sin límites
+      </p>
+    </div>
+
+    <!-- Solutions Grid -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {solutions.map((solution, index) => (
+        <div class="group relative animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+          {/* Card Background */}
+          <div class="absolute inset-0 bg-white/80 rounded-3xl border border-slate-200 backdrop-blur-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300"></div>
+          
+          {/* Card Content */}
+          <div class="relative p-8 h-full">
+            {/* Icon */}
+            <div class={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${solution.color} mb-6 group-hover:scale-110 transition-transform duration-300`}>
+              <Fragment set:html={solution.icon} />
+            </div>
+            
+            {/* Title & Description */}
+            <h3 class="text-2xl font-bold text-slate-800 mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-600 group-hover:to-emerald-600 group-hover:bg-clip-text transition-all duration-300">
+              {solution.title}
+            </h3>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed">
+              {solution.description}
+            </p>
+
+            {/* Features */}
+            <div class="space-y-4 mb-8">
+              {solution.features.map((feature) => (
+                <div class="flex items-start text-slate-700 hover:text-slate-900 transition-colors duration-200">
+                  <div class="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-r from-purple-500 to-emerald-500 flex items-center justify-center mr-3 mt-0.5">
+                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                  </div>
+                  <span class="text-sm">{feature}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Specs */}
+            <div class="flex items-center justify-between pt-6 border-t border-slate-200">
+              <div>
+                <span class="text-slate-500 text-sm">{solution.specs.label}</span>
+                <div class="flex items-center">
+                  <span class="text-2xl font-bold text-slate-800 mr-2">{solution.specs.value}</span>
+                  <span class="text-emerald-600 text-sm font-medium">{solution.specs.detail}</span>
+                </div>
+              </div>
+              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500/20 to-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+              </div>
+            </div>
+
+            {/* Hover Effects */}
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-emerald-500/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute -inset-1 bg-gradient-to-br from-purple-500/10 to-emerald-500/10 rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Enterprise Stats -->
+    <div class="mt-20 grid md:grid-cols-4 gap-8 animate-fade-in" style="animation-delay: 0.6s">
+      <div class="text-center">
+        <div class="text-4xl font-bold text-slate-800 mb-2">99.9%</div>
+        <div class="text-slate-600">Uptime SLA</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-slate-800 mb-2">50+</div>
+        <div class="text-slate-600">Enterprise Clients</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-slate-800 mb-2">1M+</div>
+        <div class="text-slate-600">API Calls/Day</div>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl font-bold text-slate-800 mb-2">SOC 2</div>
+        <div class="text-slate-600">Compliance</div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="mt-20 text-center animate-fade-in" style="animation-delay: 0.8s">
+      <div class="inline-flex items-center space-x-4">
+        <a
+          href="#contact"
+          class="group relative inline-flex items-center px-8 py-4 rounded-2xl bg-gradient-to-r from-purple-500 to-emerald-500 text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+        >
+          <span class="relative z-10">Solicitar Demo Enterprise</span>
+          <svg class="w-5 h-5 ml-2 relative z-10 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+          <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-emerald-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </a>
+        
+        <div class="flex items-center space-x-2 text-slate-500">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-emerald-500 border-2 border-white"></div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 border-2 border-white"></div>
+            <div class="w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-cyan-500 border-2 border-white"></div>
+          </div>
+          <span class="text-sm">Soporte técnico 24/7</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out forwards;
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+</style> 

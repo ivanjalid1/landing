@@ -1,0 +1,144 @@
+---
+import NotificationCenter from '../components/admin/NotificationCenter.jsx';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Panel de Administración" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} - Admin Panel</title>
+    <meta name="description" content={description} />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body class="h-full bg-gray-50 font-sans">
+    <div class="flex h-full">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white shadow-lg border-r border-gray-200">
+        <div class="p-6">
+          <div class="flex items-center space-x-3 mb-8">
+            <div class="w-10 h-10 rounded bg-blue-600 flex items-center justify-center">
+              <span class="text-white font-bold text-xl">T</span>
+            </div>
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">Top Ads</h1>
+              <p class="text-sm text-gray-500">Admin Panel</p>
+            </div>
+          </div>
+          
+          <nav class="space-y-2">
+            <a href="/admin" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-tachometer-alt w-5"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="/admin/analytics" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-chart-bar w-5"></i>
+              <span>Analytics</span>
+            </a>
+            <a href="/admin/clients" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-users w-5"></i>
+              <span>Clientes</span>
+            </a>
+            <div class="border-t border-gray-200 my-4"></div>
+            <a href="/admin/hero" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-home w-5"></i>
+              <span>Hero</span>
+            </a>
+            <a href="/admin/services" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-cogs w-5"></i>
+              <span>Servicios</span>
+            </a>
+            <a href="/admin/accounts" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-user-shield w-5"></i>
+              <span>Cuentas Premium</span>
+            </a>
+            <a href="/admin/solutions" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-building w-5"></i>
+              <span>Soluciones Enterprise</span>
+            </a>
+            <a href="/admin/faq" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-question-circle w-5"></i>
+              <span>FAQ</span>
+            </a>
+            <a href="/admin/cta" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-bullhorn w-5"></i>
+              <span>CTA Final</span>
+            </a>
+            <a href="/admin/footer" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-info-circle w-5"></i>
+              <span>Footer</span>
+            </a>
+            <div class="border-t border-gray-200 my-4"></div>
+            <a href="/admin/settings" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-cog w-5"></i>
+              <span>Configuración</span>
+            </a>
+            <div class="border-t border-gray-200 my-4"></div>
+            <a href="/" class="flex items-center space-x-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
+              <i class="fas fa-external-link-alt w-5"></i>
+              <span>Ver Sitio</span>
+            </a>
+          </nav>
+        </div>
+      </aside>
+      
+      <!-- Main Content -->
+      <main class="flex-1 overflow-auto">
+        <header class="bg-white shadow-sm border-b border-gray-200 px-8 py-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-gray-900">{title}</h2>
+            <div class="flex items-center space-x-4">
+              <NotificationCenter client:load />
+              <span class="text-sm text-gray-500">Admin</span>
+              <a href="/login" class="text-sm text-red-600 hover:text-red-700">Cerrar Sesión</a>
+            </div>
+          </div>
+        </header>
+        
+        <div class="p-8">
+          <slot />
+        </div>
+      </main>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
+    
+    <script>
+      // Función para mostrar toasts
+      window.showToast = function(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        
+        const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+        const icon = type === 'success' ? 'fas fa-check' : 'fas fa-exclamation-triangle';
+        
+        toast.className = `${bgColor} text-white px-6 py-3 rounded-lg shadow-lg mb-2 flex items-center space-x-2`;
+        toast.innerHTML = `
+          <i class="${icon}"></i>
+          <span>${message}</span>
+        `;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      };
+    </script>
+  </body>
+</html> 

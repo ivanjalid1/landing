@@ -1,0 +1,20 @@
+{
+  "name": "top-ads-landing",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "astro-frontend",
+    "node-backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd astro-frontend && npm run dev",
+    "dev:backend": "cd node-backend && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd astro-frontend && npm run build",
+    "build:backend": "cd node-backend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 

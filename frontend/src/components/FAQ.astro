@@ -1,0 +1,130 @@
+---
+// Cargar contenido dinámicamente desde el backend
+let faqContent = {
+  title: "Preguntas Frecuentes",
+  subtitle: "Resolvemos tus dudas sobre nuestros servicios y procesos",
+  questions: [
+    {
+      question: "¿Cómo funciona el proceso de entrega?",
+      answer: "Una vez confirmado el pago, recibirás las credenciales de acceso en un máximo de 24 horas. Incluimos instrucciones detalladas y soporte técnico para la configuración.",
+      category: "entrega"
+    },
+    {
+      question: "¿Qué métodos de pago aceptan?",
+      answer: "Aceptamos VISA, Mastercard, Wise, Payoneer, transferencias bancarias e IBAN. Todos los pagos son seguros y procesados por plataformas confiables.",
+      category: "pago"
+    },
+    {
+      question: "¿Ofrecen garantía en las cuentas?",
+      answer: "Sí, todas nuestras cuentas incluyen garantía de 30-90 días dependiendo del paquete. Si hay algún problema, te proporcionamos una cuenta de reemplazo.",
+      category: "garantia"
+    },
+    {
+      question: "¿Cómo puedo contactar soporte técnico?",
+      answer: "Puedes contactarnos por Telegram @topads_support, WhatsApp o email. Nuestro equipo está disponible 24/7 para resolver cualquier consulta.",
+      category: "soporte"
+    }
+  ]
+};
+
+try {
+  const response = await fetch('http://localhost:5000/api/content/faq');
+  if (response.ok) {
+    const data = await response.json();
+    if (data.success && data.data?.data) {
+      faqContent = data.data.data;
+    }
+  }
+} catch (error) {
+  console.log('Error cargando contenido de FAQ:', error);
+}
+
+const faqs = faqContent.questions || [];
+---
+
+<section class="py-24 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50" id="faq">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-16 animate-fade-in">
+      <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 mb-6">
+        <span class="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full mr-2 animate-pulse"></span>
+        <span class="text-slate-700 text-sm font-medium">FAQ</span>
+      </div>
+      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
+        {faqContent.title}
+      </h2>
+      <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+        {faqContent.subtitle}
+      </p>
+    </div>
+
+    <!-- FAQ Grid -->
+    <div class="max-w-4xl mx-auto">
+      <div class="space-y-6">
+        {faqs.map((faq, index) => (
+          <div class="group bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
+            <button class="w-full text-left" onclick={`toggleFAQ(${index})`}>
+              <div class="flex items-center justify-between">
+                <h3 class="text-xl font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+                  {faq.question}
+                </h3>
+                <svg class="w-6 h-6 text-slate-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </button>
+            <div class="mt-4 text-slate-600 leading-relaxed faq-answer" id={`faq-answer-${index}`}>
+              {faq.answer}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggleFAQ(index) {
+    const answer = document.getElementById(`faq-answer-${index}`);
+    const button = answer.previousElementSibling;
+    const icon = button.querySelector('svg');
+    
+    if (answer.style.display === 'none' || answer.style.display === '') {
+      answer.style.display = 'block';
+      icon.style.transform = 'rotate(180deg)';
+    } else {
+      answer.style.display = 'none';
+      icon.style.transform = 'rotate(0deg)';
+    }
+  }
+</script>
+
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fade-in-up {
+    from { 
+      opacity: 0; 
+      transform: translateY(30px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+  
+  .faq-answer {
+    display: none;
+  }
+</style> 

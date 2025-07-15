@@ -1,0 +1,69 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ContentEditor from '../../components/admin/ContentEditor.jsx';
+---
+
+<AdminLayout title="Editar Cuentas Premium">
+  <ContentEditor 
+    client:load
+    section="accounts"
+    title="Editar Sección de Cuentas Premium"
+    description="Modifica el título, subtítulo y lista de paquetes de cuentas premium"
+    fields={[
+      {
+        name: 'title',
+        label: 'Título de la Sección',
+        type: 'text',
+        placeholder: 'Ej: Cuentas Premium Disponibles',
+        required: true
+      },
+      {
+        name: 'subtitle',
+        label: 'Subtítulo de la Sección',
+        type: 'textarea',
+        placeholder: 'Descripción general de los paquetes...',
+        rows: 2,
+        required: true
+      },
+      {
+        name: 'accounts',
+        label: 'Lista de Paquetes',
+        type: 'array',
+        itemLabel: 'Paquete',
+        template: {
+          name: '',
+          price: '',
+          description: '',
+          features: [],
+          popular: false
+        },
+        fields: [
+          {
+            name: 'name',
+            label: 'Nombre del Paquete',
+            type: 'text',
+            placeholder: 'Ej: Starter Pack'
+          },
+          {
+            name: 'price',
+            label: 'Precio',
+            type: 'text',
+            placeholder: 'Ej: $99'
+          },
+          {
+            name: 'description',
+            label: 'Descripción del Paquete',
+            type: 'textarea',
+            placeholder: 'Descripción breve del paquete...',
+            rows: 2
+          },
+          {
+            name: 'popular',
+            label: '¿Es el paquete más popular?',
+            type: 'checkbox'
+          }
+        ]
+      }
+    ]}
+  />
+</AdminLayout> 

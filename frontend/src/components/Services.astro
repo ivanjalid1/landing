@@ -1,0 +1,148 @@
+---
+// Cargar contenido dinámicamente desde el backend
+let servicesContent = {
+  title: "Nuestros Servicios Premium",
+  subtitle: "Soluciones especializadas para escalar tu negocio digital",
+  services: [
+    {
+      title: "Cuentas Premium",
+      description: "Acceso a cuentas verificadas con historial limpio",
+      icon: "shield-check"
+    },
+    {
+      title: "Gestión de Campañas",
+      description: "Optimización profesional de tus campañas publicitarias",
+      icon: "chart-line"
+    },
+    {
+      title: "Soporte Técnico",
+      description: "Asistencia especializada para resolver cualquier problema",
+      icon: "headset"
+    }
+  ]
+};
+
+try {
+  const response = await fetch('http://localhost:5000/api/content/services');
+  if (response.ok) {
+    const data = await response.json();
+    if (data.success && data.data?.data) {
+      servicesContent = data.data.data;
+    }
+  }
+} catch (error) {
+  console.log('Error cargando contenido de servicios:', error);
+}
+
+const services = servicesContent.services || [];
+---
+
+<section class="py-24 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50" id="services">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-16 animate-fade-in">
+      <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 mb-6">
+        <span class="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full mr-2 animate-pulse"></span>
+        <span class="text-slate-700 text-sm font-medium">Servicios Premium</span>
+      </div>
+      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
+        {servicesContent.title}
+      </h2>
+      <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+        {servicesContent.subtitle}
+      </p>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="grid lg:grid-cols-3 gap-8">
+      {services.map((service, index) => (
+        <div class="group relative animate-fade-in-up" style={`animation-delay: ${index * 0.2}s`}>
+          {/* Card Background */}
+          <div class="absolute inset-0 bg-white/80 rounded-3xl border border-slate-200 backdrop-blur-xl shadow-lg"></div>
+          
+          {/* Card Content */}
+          <div class="relative p-8 h-full">
+            {/* Icon */}
+            <div class="inline-flex p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {service.icon === "shield-check" && (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                )}
+                {service.icon === "chart-line" && (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                )}
+                {service.icon === "headset" && (
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                )}
+              </svg>
+            </div>
+            
+            {/* Title & Description */}
+            <h3 class="text-2xl font-bold text-slate-800 mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-cyan-600 group-hover:bg-clip-text transition-all duration-300">
+              {service.title}
+            </h3>
+            
+            <p class="text-slate-600 mb-8 leading-relaxed">
+              {service.description}
+            </p>
+
+            {/* Features */}
+            {service.features && (
+              <div class="space-y-4 mb-8">
+                {service.features.map((feature) => (
+                  <div class="flex items-start text-slate-700 hover:text-slate-900 transition-colors duration-200">
+                    <div class="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mr-3 mt-0.5">
+                      <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                    </div>
+                    <span class="text-sm">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Stats */}
+            {service.stats && (
+              <div class="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl">
+                <div>
+                  <p class="text-sm text-slate-600">{service.stats.label}</p>
+                  <p class="text-2xl font-bold text-slate-800">{service.stats.value}</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-green-600 font-semibold">{service.stats.trend}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fade-in-up {
+    from { 
+      opacity: 0; 
+      transform: translateY(30px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+</style> 

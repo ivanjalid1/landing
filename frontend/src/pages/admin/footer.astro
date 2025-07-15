@@ -1,0 +1,65 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ContentEditor from '../../components/admin/ContentEditor.jsx';
+---
+
+<AdminLayout title="Editar Footer">
+  <ContentEditor 
+    client:load
+    section="footer"
+    title="Editar Sección Footer"
+    description="Modifica la información de contacto, redes sociales y enlaces del footer"
+    fields={[
+      {
+        name: 'companyName',
+        label: 'Nombre de la Empresa',
+        type: 'text',
+        placeholder: 'Ej: Top Ads Premium Marketing',
+        required: true
+      },
+      {
+        name: 'description',
+        label: 'Descripción de la Empresa',
+        type: 'textarea',
+        placeholder: 'Descripción breve de la empresa...',
+        rows: 2,
+        required: true
+      },
+      {
+        name: 'contact.phone',
+        label: 'Teléfono de Contacto',
+        type: 'text',
+        placeholder: 'Ej: +1 (555) 123-4567',
+        required: false
+      },
+      {
+        name: 'contact.email',
+        label: 'Email de Contacto',
+        type: 'text',
+        placeholder: 'Ej: contact@topads.com',
+        required: false
+      },
+      {
+        name: 'contact.telegram',
+        label: 'Usuario de Telegram',
+        type: 'text',
+        placeholder: 'Ej: @topads_support',
+        required: false
+      },
+      {
+        name: 'social.telegram',
+        label: 'Link de Telegram',
+        type: 'url',
+        placeholder: 'Ej: https://t.me/topads_support',
+        required: false
+      },
+      {
+        name: 'social.whatsapp',
+        label: 'Link de WhatsApp',
+        type: 'url',
+        placeholder: 'Ej: https://wa.me/15551234567',
+        required: false
+      }
+    ]}
+  />
+</AdminLayout> 

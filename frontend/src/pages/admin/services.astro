@@ -1,0 +1,63 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ContentEditor from '../../components/admin/ContentEditor.jsx';
+---
+
+<AdminLayout title="Editar Servicios">
+  <ContentEditor 
+    client:load
+    section="services"
+    title="Editar Sección de Servicios"
+    description="Modifica el título, subtítulo y lista de servicios ofrecidos"
+    fields={[
+      {
+        name: 'title',
+        label: 'Título de la Sección',
+        type: 'text',
+        placeholder: 'Ej: Nuestros Servicios Premium',
+        required: true
+      },
+      {
+        name: 'subtitle',
+        label: 'Subtítulo de la Sección',
+        type: 'textarea',
+        placeholder: 'Descripción general de los servicios...',
+        rows: 2,
+        required: true
+      },
+      {
+        name: 'services',
+        label: 'Lista de Servicios',
+        type: 'array',
+        itemLabel: 'Servicio',
+        template: {
+          title: '',
+          description: '',
+          icon: '',
+          features: []
+        },
+        fields: [
+          {
+            name: 'title',
+            label: 'Título del Servicio',
+            type: 'text',
+            placeholder: 'Ej: Cuentas Premium'
+          },
+          {
+            name: 'description',
+            label: 'Descripción del Servicio',
+            type: 'textarea',
+            placeholder: 'Descripción detallada del servicio...',
+            rows: 3
+          },
+          {
+            name: 'icon',
+            label: 'Icono (clase CSS)',
+            type: 'text',
+            placeholder: 'Ej: shield-check, chart-line, headset'
+          }
+        ]
+      }
+    ]}
+  />
+</AdminLayout> 

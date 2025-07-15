@@ -1,0 +1,58 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ContentEditor from '../../components/admin/ContentEditor.jsx';
+---
+
+<AdminLayout title="Editar Hero">
+  <ContentEditor 
+    client:load
+    section="hero"
+    title="Editar Sección Hero"
+    description="Modifica el título principal, subtítulo, botones y enlaces de la sección hero"
+    fields={[
+      {
+        name: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        placeholder: 'Ej: Your #1 agency for advertising assets & solutions!',
+        required: true
+      },
+      {
+        name: 'subtitle',
+        label: 'Subtítulo',
+        type: 'textarea',
+        placeholder: 'Descripción del servicio principal...',
+        rows: 3,
+        required: true
+      },
+      {
+        name: 'buttonText',
+        label: 'Texto del Botón Principal',
+        type: 'text',
+        placeholder: 'Ej: 🚀 Contact Direct',
+        required: true
+      },
+      {
+        name: 'buttonLink',
+        label: 'Enlace del Botón Principal',
+        type: 'url',
+        placeholder: 'Ej: #contact o https://t.me/topads_support',
+        required: false
+      },
+      {
+        name: 'paymentInfo',
+        label: 'Información de Pago',
+        type: 'text',
+        placeholder: 'Ej: Contact us to pay using VISA, Wise, Payoneer...',
+        required: false
+      },
+      {
+        name: 'supportText',
+        label: 'Texto de Soporte',
+        type: 'text',
+        placeholder: 'Ej: Support',
+        required: false
+      }
+    ]}
+  />
+</AdminLayout> 

@@ -1,0 +1,8 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ClientManager from '../../components/admin/ClientManager.jsx';
+---
+
+<AdminLayout title="Gestión de Clientes">
+  <ClientManager client:load />
+</AdminLayout> 

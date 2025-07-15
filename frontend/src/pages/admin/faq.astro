@@ -1,0 +1,66 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ContentEditor from '../../components/admin/ContentEditor.jsx';
+---
+
+<AdminLayout title="Editar FAQ">
+  <ContentEditor 
+    client:load
+    section="faq"
+    title="Editar Sección FAQ"
+    description="Modifica las preguntas frecuentes y sus respuestas"
+    fields={[
+      {
+        name: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        placeholder: 'Ej: Preguntas Frecuentes',
+        required: true
+      },
+      {
+        name: 'subtitle',
+        label: 'Subtítulo',
+        type: 'textarea',
+        placeholder: 'Descripción de la sección FAQ...',
+        rows: 2,
+        required: true
+      },
+      {
+        name: 'questions',
+        label: 'Preguntas Frecuentes',
+        type: 'array',
+        itemLabel: 'Pregunta',
+        required: true,
+        template: {
+          question: '',
+          answer: '',
+          category: 'general'
+        },
+        fields: [
+          {
+            name: 'question',
+            label: 'Pregunta',
+            type: 'text',
+            placeholder: 'Ej: ¿Cómo funciona el proceso de entrega?',
+            required: true
+          },
+          {
+            name: 'answer',
+            label: 'Respuesta',
+            type: 'textarea',
+            placeholder: 'Respuesta detallada a la pregunta...',
+            rows: 4,
+            required: true
+          },
+          {
+            name: 'category',
+            label: 'Categoría',
+            type: 'text',
+            placeholder: 'Ej: general, entrega, pago, soporte',
+            required: false
+          }
+        ]
+      }
+    ]}
+  />
+</AdminLayout> 

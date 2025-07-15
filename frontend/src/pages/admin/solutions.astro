@@ -1,0 +1,82 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ContentEditor from '../../components/admin/ContentEditor.jsx';
+---
+
+<AdminLayout title="Editar Soluciones Enterprise">
+  <ContentEditor 
+    client:load
+    section="solutions"
+    title="Editar Sección Soluciones Enterprise"
+    description="Modifica el contenido de la sección de soluciones enterprise y casos de uso"
+    fields={[
+      {
+        name: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        placeholder: 'Ej: Enterprise Solutions & Business Cases',
+        required: true
+      },
+      {
+        name: 'subtitle',
+        label: 'Subtítulo',
+        type: 'textarea',
+        placeholder: 'Descripción de las soluciones enterprise...',
+        rows: 3,
+        required: true
+      },
+      {
+        name: 'solutions',
+        label: 'Soluciones Enterprise',
+        type: 'array',
+        itemLabel: 'Solución',
+        required: true,
+        template: {
+          title: '',
+          description: '',
+          features: '',
+          price: '',
+          isPopular: false
+        },
+        fields: [
+          {
+            name: 'title',
+            label: 'Título de la Solución',
+            type: 'text',
+            placeholder: 'Ej: Facebook Ads Enterprise',
+            required: true
+          },
+          {
+            name: 'description',
+            label: 'Descripción',
+            type: 'textarea',
+            placeholder: 'Descripción detallada de la solución...',
+            rows: 3,
+            required: true
+          },
+          {
+            name: 'features',
+            label: 'Características (una por línea)',
+            type: 'textarea',
+            placeholder: 'Característica 1\nCaracterística 2\nCaracterística 3',
+            rows: 4,
+            required: true
+          },
+          {
+            name: 'price',
+            label: 'Precio',
+            type: 'text',
+            placeholder: 'Ej: $999/mes o Contactar',
+            required: true
+          },
+          {
+            name: 'isPopular',
+            label: 'Marcar como Popular',
+            type: 'checkbox',
+            required: false
+          }
+        ]
+      }
+    ]}
+  />
+</AdminLayout> 
