@@ -11,28 +11,28 @@
   "dependencies": {
     "@astrojs/node": "^8.2.0",
     "@astrojs/react": "^3.0.10",
-    "@astrojs/tailwind": "^5.1.0",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
+    "@hotjar/browser": "^1.0.0",
     "astro": "^4.3.5",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^10.18.0",
+    "heatmap.js": "^2.0.5",
+    "mixpanel-browser": "^2.49.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
-    "tailwindcss": "^3.4.1",
-    "heatmap.js": "^2.0.5",
-    "mixpanel-browser": "^2.49.0",
-    "@hotjar/browser": "^1.0.0",
-    "framer-motion": "^10.16.4",
-    "recharts": "^2.8.0",
-    "date-fns": "^2.30.0"
+    "recharts": "^2.8.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
+    "@astrojs/tailwind": "^6.0.2",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
-    "@tailwindcss/aspect-ratio": "^0.4.2",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35"
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
   }
-} 
+}

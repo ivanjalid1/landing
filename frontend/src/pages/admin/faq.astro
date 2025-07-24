@@ -7,12 +7,12 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
   <ContentEditor 
     client:load
     section="faq"
-    title="Editar Sección FAQ"
-    description="Modifica las preguntas frecuentes y sus respuestas"
+    title="Editar Preguntas Frecuentes"
+    description="Modifica las preguntas y respuestas de la sección FAQ"
     fields={[
       {
         name: 'title',
-        label: 'Título Principal',
+        label: 'Título de la Sección',
         type: 'text',
         placeholder: 'Ej: Preguntas Frecuentes',
         required: true
@@ -22,15 +22,14 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
         label: 'Subtítulo',
         type: 'textarea',
         placeholder: 'Descripción de la sección FAQ...',
-        rows: 2,
+        rows: 3,
         required: true
       },
       {
         name: 'questions',
-        label: 'Preguntas Frecuentes',
+        label: 'Preguntas y Respuestas',
         type: 'array',
         itemLabel: 'Pregunta',
-        required: true,
         template: {
           question: '',
           answer: '',
@@ -41,23 +40,20 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
             name: 'question',
             label: 'Pregunta',
             type: 'text',
-            placeholder: 'Ej: ¿Cómo funciona el proceso de entrega?',
-            required: true
+            placeholder: 'Ej: ¿Cómo funciona el servicio?'
           },
           {
             name: 'answer',
             label: 'Respuesta',
             type: 'textarea',
-            placeholder: 'Respuesta detallada a la pregunta...',
-            rows: 4,
-            required: true
+            placeholder: 'Respuesta detallada...',
+            rows: 4
           },
           {
             name: 'category',
             label: 'Categoría',
             type: 'text',
-            placeholder: 'Ej: general, entrega, pago, soporte',
-            required: false
+            placeholder: 'Ej: general, precios, soporte'
           }
         ]
       }

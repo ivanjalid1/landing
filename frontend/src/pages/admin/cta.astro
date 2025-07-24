@@ -1,0 +1,51 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ContentEditor from '../../components/admin/ContentEditor.jsx';
+---
+
+<AdminLayout title="Editar CTA">
+  <ContentEditor 
+    client:load
+    section="cta"
+    title="Editar Sección CTA"
+    description="Modifica el call to action final de la página"
+    fields={[
+      {
+        name: 'title',
+        label: 'Título Principal',
+        type: 'text',
+        placeholder: 'Ej: ¿Listo para escalar tu negocio?',
+        required: true
+      },
+      {
+        name: 'subtitle',
+        label: 'Subtítulo',
+        type: 'textarea',
+        placeholder: 'Descripción del CTA...',
+        rows: 2,
+        required: true
+      },
+      {
+        name: 'buttonText',
+        label: 'Texto del Botón',
+        type: 'text',
+        placeholder: 'Ej: 🚀 Conectar Ahora',
+        required: true
+      },
+      {
+        name: 'buttonLink',
+        label: 'Enlace del Botón',
+        type: 'text',
+        placeholder: 'Ej: #contact o https://...',
+        required: true
+      },
+      {
+        name: 'urgencyText',
+        label: 'Texto de Urgencia',
+        type: 'text',
+        placeholder: 'Ej: Oferta limitada - ¡No te quedes sin tu cuenta!',
+        required: false
+      }
+    ]}
+  />
+</AdminLayout> 

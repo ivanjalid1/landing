@@ -1,0 +1,42 @@
+Resumen de mejoras y cambios en la landing
+=========================================
+
+1. **SSR y Fetch Server-Side en Astro**
+   - Se migraron secciones dinámicas (Hero, FAQ, Testimonios, Servicios, Cuentas, Soluciones) a fetch server-side para evitar contenido viejo y mejorar la experiencia.
+   - Se eliminaron scripts de manipulación manual del DOM en los componentes afectados.
+
+2. **Cards y Features**
+   - Todas las cards de Servicios Premium, Cuentas Premium y Soluciones Enterprise muestran exactamente 6 features técnicas, usando features por defecto si la API no provee suficientes.
+   - Se corrigió la lógica para evitar mostrar guiones innecesarios y asegurar estructura y tamaño coherente.
+   - Se mejoró el contenido de la base de datos para títulos, subtítulos, precios y características.
+
+3. **SVG y Visuales**
+   - El SVG decorativo del Hero fue rotado en espejo y reposicionado para no tapar el texto "agency".
+   - Se agregó un texto centrado debajo del Hero que redirige a contacto.
+   - Se revisaron y sincronizaron todos los botones con flecha SVG para que la flecha esté alineada y animada igual en toda la app.
+
+4. **Botones y CTA**
+   - El botón "Conectar Ahora" del header ahora reutiliza el estilo del botón del FAQ, con altura más pequeña.
+   - El botón "Contáctanos ahora" en la sección de contacto tiene la flecha SVG alineada y animada igual que el resto.
+   - Se corrigieron problemas de espaciado y visualización en el CTA de Servicios Premium.
+
+5. **Seeder y Backend**
+   - Se revisó y actualizó el seeder de servicios para que cada servicio tenga 6 features profesionales y completas.
+   - En "Consultoría Estratégica" se reemplazó "Soporte prioritario" por:
+     - Análisis de Conversión Funnel
+     - Auditoría de Pixel & Events
+   - Ahora la sección tiene 6 features técnicas y coherentes.
+   - Se explicó cómo ejecutar el seeder para actualizar la base de datos y reflejar los cambios en el frontend.
+
+6. **Consistencia visual y experiencia**
+   - Se mejoró la experiencia visual y de conversión en todas las secciones dinámicas.
+   - Se aseguraron los espaciados, alineaciones y animaciones para una presentación profesional y coherente.
+
+---
+
+**Para aplicar los cambios del seeder:**
+1. Ve a la carpeta backend.
+2. Ejecuta el script de seed correspondiente (ejemplo: `node src/seeders/contentSeeder.js` o el comando que uses habitualmente).
+3. Reinicia el frontend si es necesario para ver los cambios reflejados.
+
+Cualquier ajuste o mejora adicional, ¡avísame! 🚀 

@@ -1,130 +1,202 @@
 ---
-// Cargar contenido dinámicamente desde el backend
-let faqContent = {
-  title: "Preguntas Frecuentes",
-  subtitle: "Resolvemos tus dudas sobre nuestros servicios y procesos",
-  questions: [
-    {
-      question: "¿Cómo funciona el proceso de entrega?",
-      answer: "Una vez confirmado el pago, recibirás las credenciales de acceso en un máximo de 24 horas. Incluimos instrucciones detalladas y soporte técnico para la configuración.",
-      category: "entrega"
-    },
-    {
-      question: "¿Qué métodos de pago aceptan?",
-      answer: "Aceptamos VISA, Mastercard, Wise, Payoneer, transferencias bancarias e IBAN. Todos los pagos son seguros y procesados por plataformas confiables.",
-      category: "pago"
-    },
-    {
-      question: "¿Ofrecen garantía en las cuentas?",
-      answer: "Sí, todas nuestras cuentas incluyen garantía de 30-90 días dependiendo del paquete. Si hay algún problema, te proporcionamos una cuenta de reemplazo.",
-      category: "garantia"
-    },
-    {
-      question: "¿Cómo puedo contactar soporte técnico?",
-      answer: "Puedes contactarnos por Telegram @topads_support, WhatsApp o email. Nuestro equipo está disponible 24/7 para resolver cualquier consulta.",
-      category: "soporte"
-    }
-  ]
-};
+import { translations } from '../i18n/translations.js';
+import { extractLanguageFromUrl } from '../middleware/i18n.js';
 
-try {
-  const response = await fetch('http://localhost:5000/api/content/faq');
-  if (response.ok) {
-    const data = await response.json();
-    if (data.success && data.data?.data) {
-      faqContent = data.data.data;
-    }
+const currentLang = extractLanguageFromUrl(Astro.url.pathname);
+const t = translations[currentLang as keyof typeof translations];
+
+const categories = [
+  {
+    title: "Servicios",
+    icon: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>',
+    questions: [
+      {
+        question: "¿Qué servicios ofrecen?",
+        answer: "Ofrecemos servicios completos de marketing digital, incluyendo gestión de campañas publicitarias, optimización de conversiones, y estrategias personalizadas para cada cliente."
+      },
+      {
+        question: "¿Cómo funcionan sus servicios premium?",
+        answer: "Nuestros servicios premium incluyen atención personalizada 24/7, estrategias optimizadas, y reportes detallados de rendimiento. Cada plan se adapta a las necesidades específicas de tu negocio."
+      }
+    ]
+  },
+  {
+    title: "Precios y Pagos",
+    icon: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+    questions: [
+      {
+        question: "¿Cuáles son sus planes de precios?",
+        answer: "Ofrecemos planes flexibles que se adaptan a diferentes presupuestos y necesidades. Contáctanos para recibir una cotización personalizada basada en tus objetivos."
+      },
+      {
+        question: "¿Qué métodos de pago aceptan?",
+        answer: "Aceptamos todas las tarjetas de crédito principales, transferencias bancarias y PayPal. También ofrecemos opciones de pago flexibles para planes empresariales."
+      }
+    ]
+  },
+  {
+    title: "Soporte",
+    icon: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>',
+    questions: [
+      {
+        question: "¿Cómo puedo contactar al soporte?",
+        answer: "Nuestro equipo de soporte está disponible 24/7 a través de chat en vivo, correo electrónico y teléfono. Los clientes premium tienen acceso a líneas dedicadas de atención."
+      },
+      {
+        question: "¿Cuál es el tiempo de respuesta promedio?",
+        answer: "Para clientes premium, garantizamos respuestas en menos de 15 minutos. Para consultas generales, nuestro tiempo de respuesta promedio es de 1 hora."
+      }
+    ]
   }
-} catch (error) {
-  console.log('Error cargando contenido de FAQ:', error);
-}
-
-const faqs = faqContent.questions || [];
+];
 ---
 
-<section class="py-24 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50" id="faq">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative py-24 bg-tech-900 text-white overflow-hidden">
+  <!-- Background Effects -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(249,115,22,0.1),transparent)] pointer-events-none"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(249,115,22,0.05),transparent)] pointer-events-none"></div>
+  
+  <!-- Grid Pattern -->
+  <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
-    <div class="text-center mb-16 animate-fade-in">
-      <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 mb-6">
-        <span class="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full mr-2 animate-pulse"></span>
-        <span class="text-slate-700 text-sm font-medium">FAQ</span>
+    <div class="text-center mb-20 scroll-reveal">
+      <div class="inline-flex items-center px-4 py-2 rounded-full bg-tech-800/50 border border-tech-700/50 backdrop-blur-sm mb-6">
+        <span class="animate-pulse w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+        <span class="text-primary-400 text-sm font-medium">Centro de Ayuda</span>
       </div>
-      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
-        {faqContent.title}
+
+      <h2 class="text-4xl lg:text-5xl font-bold mb-6">
+        Preguntas <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 animate-gradient-x">Frecuentes</span>
       </h2>
-      <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-        {faqContent.subtitle}
+
+      <p class="text-xl text-tech-300 max-w-3xl mx-auto mb-12">
+        Encuentra respuestas a las preguntas más comunes sobre nuestros servicios
       </p>
     </div>
 
-    <!-- FAQ Grid -->
     <div class="max-w-4xl mx-auto">
-      <div class="space-y-6">
-        {faqs.map((faq, index) => (
-          <div class="group bg-white/80 backdrop-blur-sm border border-slate-200 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 animate-fade-in-up" style={`animation-delay: ${index * 0.1}s`}>
-            <button class="w-full text-left" onclick={`toggleFAQ(${index})`}>
-              <div class="flex items-center justify-between">
-                <h3 class="text-xl font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
-                  {faq.question}
-                </h3>
-                <svg class="w-6 h-6 text-slate-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+      {categories.map((category, categoryIndex) => (
+        <div class="mb-16 last:mb-0 scroll-reveal" style={`--delay: ${categoryIndex * 0.2}s`}>
+          <div class="flex items-center gap-4 mb-8">
+            <div class="relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-xl blur-lg"></div>
+              <div class="relative w-12 h-12 flex items-center justify-center rounded-xl bg-gradient-to-r from-primary-500 to-primary-600">
+                <div class="text-white" set:html={category.icon} />
               </div>
-            </button>
-            <div class="mt-4 text-slate-600 leading-relaxed faq-answer" id={`faq-answer-${index}`}>
-              {faq.answer}
             </div>
+            <h3 class="text-2xl font-bold text-white">
+              {category.title}
+            </h3>
           </div>
-        ))}
-      </div>
+
+          <div class="space-y-6">
+            {category.questions.map((item, index) => (
+              <div 
+                class="faq-item group relative bg-tech-800/30 rounded-2xl p-6 hover:bg-tech-800/50 transition-all duration-300 scroll-reveal"
+                style={`--delay: ${(categoryIndex * 0.2) + ((index + 1) * 0.1)}s`}
+              >
+                <div class="absolute inset-0 bg-gradient-to-r from-primary-500/5 to-transparent opacity-0 group-[.active]:opacity-100 transition-all duration-300 rounded-2xl"></div>
+                <div class="relative">
+                  <button class="w-full text-left">
+                    <div class="flex items-center justify-between cursor-pointer">
+                      <h4 class="text-lg font-semibold text-white group-[.active]:text-primary-400 transition-colors duration-300">
+                        {item.question}
+                      </h4>
+                      <div class="relative ml-4 flex-shrink-0">
+                        <div class="w-8 h-8 flex items-center justify-center rounded-full bg-tech-700/50 group-[.active]:bg-primary-500/20 transition-colors duration-300">
+                          <svg 
+                            class="w-4 h-4 text-primary-400 transform group-[.active]:rotate-180 transition-transform duration-300" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-4 text-tech-300 hidden group-[.active]:block transition-all duration-300 pl-0 group-[.active]:pl-6 border-l-0 group-[.active]:border-l-2 border-primary-500">
+                      {item.answer}
+                    </div>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   </div>
 </section>
 
-<script>
-  function toggleFAQ(index) {
-    const answer = document.getElementById(`faq-answer-${index}`);
-    const button = answer.previousElementSibling;
-    const icon = button.querySelector('svg');
-    
-    if (answer.style.display === 'none' || answer.style.display === '') {
-      answer.style.display = 'block';
-      icon.style.transform = 'rotate(180deg)';
-    } else {
-      answer.style.display = 'none';
-      icon.style.transform = 'rotate(0deg)';
-    }
-  }
-</script>
-
 <style>
-  @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
   }
-  
-  @keyframes fade-in-up {
-    from { 
-      opacity: 0; 
-      transform: translateY(30px); 
-    }
-    to { 
-      opacity: 1; 
-      transform: translateY(0); 
-    }
+  50% {
+    background-position: 100% 50%;
   }
-  
-  .animate-fade-in {
-    animation: fade-in 1s ease-out;
+  100% {
+    background-position: 0% 50%;
   }
-  
-  .animate-fade-in-up {
-    animation: fade-in-up 0.8s ease-out forwards;
-  }
-  
-  .faq-answer {
-    display: none;
-  }
-</style> 
+}
+
+.animate-gradient-x {
+  animation: gradient-x 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+  animation-delay: var(--delay, 0s);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+
+<script>
+  // Intersection Observer para animaciones al hacer scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, observerOptions);
+
+  // Observar elementos con scroll-reveal
+  document.addEventListener('DOMContentLoaded', () => {
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+    scrollRevealElements.forEach(el => observer.observe(el));
+
+    // Manejar clic en las preguntas
+    document.querySelectorAll('.faq-item').forEach(item => {
+      const button = item.querySelector('button');
+      if (button) {
+        button.addEventListener('click', () => {
+          // Cerrar otras preguntas
+          document.querySelectorAll('.faq-item.active').forEach(activeItem => {
+            if (activeItem !== item) {
+              activeItem.classList.remove('active');
+            }
+          });
+          // Toggle la pregunta actual
+          item.classList.toggle('active');
+        });
+      }
+    });
+  });
+</script> 

@@ -1,11 +1,26 @@
-const Content = require('../models/Content');
+const { Content } = require('../models');
 const { validationResult } = require('express-validator');
+const { getCache, setCache, deleteCache } = require('../config/redis');
 
-// Obtener contenido de una sección específica
-const getContent = async (req, res) => {
+// Obtener contenido público de una sección específica (con cache)
+const getPublicContent = async (req, res) => {
   try {
     const { section } = req.params;
     
+    // Intentar obtener del cache primero
+    const cacheKey = `content:public:${section}`;
+    const cachedData = await getCache(cacheKey);
+    
+    if (cachedData) {
+      console.log(`✅ Cache hit para sección: ${section}`);
+      return res.json({
+        success: true,
+        data: cachedData,
+        cached: true
+      });
+    }
+
+    // Si no está en cache, obtener de la base de datos
     const content = await Content.findOne({
       where: { section, isActive: true }
     });
@@ -17,9 +32,95 @@ const getContent = async (req, res) => {
       });
     }
 
+    // Guardar en cache por 1 hora
+    await setCache(cacheKey, content, 3600);
+
     res.json({
       success: true,
-      data: content
+      data: content,
+      cached: false
+    });
+  } catch (error) {
+    console.error('Error al obtener contenido público:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+};
+
+// Obtener todo el contenido público (con cache)
+const getAllPublicContent = async (req, res) => {
+  try {
+    const cacheKey = 'content:public:all';
+    const cachedData = await getCache(cacheKey);
+    
+    if (cachedData) {
+      console.log('✅ Cache hit para todo el contenido público');
+      return res.json({
+        success: true,
+        data: cachedData,
+        cached: true
+      });
+    }
+
+    const contents = await Content.findAll({
+      where: { isActive: true },
+      order: [['section', 'ASC']]
+    });
+
+    // Guardar en cache por 30 minutos
+    await setCache(cacheKey, contents, 1800);
+
+    res.json({
+      success: true,
+      data: contents,
+      cached: false
+    });
+  } catch (error) {
+    console.error('Error al obtener todo el contenido público:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error interno del servidor'
+    });
+  }
+};
+
+// Obtener contenido de una sección específica (con cache)
+const getContent = async (req, res) => {
+  try {
+    const { section } = req.params;
+    
+    const cacheKey = `content:${section}`;
+    const cachedData = await getCache(cacheKey);
+    
+    if (cachedData) {
+      console.log(`✅ Cache hit para sección: ${section}`);
+      return res.json({
+        success: true,
+        data: cachedData,
+        cached: true
+      });
+    }
+
+    const content = await Content.findOne({
+      where: { section, isActive: true }
+    });
+
+    if (!content) {
+      return res.status(404).json({
+        success: false,
+        message: `Contenido de la sección '${section}' no encontrado`
+      });
+    }
+
+    // Guardar en cache por 1 hora
+    await setCache(cacheKey, content, 3600);
+
+    res.json({
+      success: true,
+      data: content,
+      cached: false
     });
   } catch (error) {
     console.error('Error al obtener contenido:', error);
@@ -30,17 +131,33 @@ const getContent = async (req, res) => {
   }
 };
 
-// Obtener todo el contenido
+// Obtener todo el contenido (con cache)
 const getAllContent = async (req, res) => {
   try {
+    const cacheKey = 'content:all';
+    const cachedData = await getCache(cacheKey);
+    
+    if (cachedData) {
+      console.log('✅ Cache hit para todo el contenido');
+      return res.json({
+        success: true,
+        data: cachedData,
+        cached: true
+      });
+    }
+
     const contents = await Content.findAll({
       where: { isActive: true },
       order: [['section', 'ASC']]
     });
 
+    // Guardar en cache por 30 minutos
+    await setCache(cacheKey, contents, 1800);
+
     res.json({
       success: true,
-      data: contents
+      data: contents,
+      cached: false
     });
   } catch (error) {
     console.error('Error al obtener todo el contenido:', error);
@@ -51,7 +168,7 @@ const getAllContent = async (req, res) => {
   }
 };
 
-// Crear o actualizar contenido de una sección
+// Crear o actualizar contenido de una sección (invalida cache)
 const updateContent = async (req, res) => {
   try {
     const { section } = req.params;
@@ -85,6 +202,12 @@ const updateContent = async (req, res) => {
       });
     }
 
+    // Invalidar cache relacionado
+    await deleteCache(`content:${section}`);
+    await deleteCache(`content:public:${section}`);
+    await deleteCache('content:all');
+    await deleteCache('content:public:all');
+
     res.json({
       success: true,
       message: `Contenido de la sección '${section}' actualizado exitosamente`,
@@ -99,7 +222,7 @@ const updateContent = async (req, res) => {
   }
 };
 
-// Eliminar contenido de una sección (soft delete)
+// Eliminar contenido de una sección (soft delete + invalida cache)
 const deleteContent = async (req, res) => {
   try {
     const { section } = req.params;
@@ -117,6 +240,12 @@ const deleteContent = async (req, res) => {
 
     await content.update({ isActive: false });
 
+    // Invalidar cache relacionado
+    await deleteCache(`content:${section}`);
+    await deleteCache(`content:public:${section}`);
+    await deleteCache('content:all');
+    await deleteCache('content:public:all');
+
     res.json({
       success: true,
       message: `Contenido de la sección '${section}' eliminado exitosamente`
@@ -130,9 +259,20 @@ const deleteContent = async (req, res) => {
   }
 };
 
-// Obtener secciones disponibles
+// Obtener secciones disponibles (con cache)
 const getSections = async (req, res) => {
   try {
+    const cacheKey = 'sections:list';
+    const cachedData = await getCache(cacheKey);
+    
+    if (cachedData) {
+      return res.json({
+        success: true,
+        data: cachedData,
+        cached: true
+      });
+    }
+
     const sections = [
       {
         name: 'hero',
@@ -171,9 +311,13 @@ const getSections = async (req, res) => {
       }
     ];
 
+    // Guardar en cache por 1 hora
+    await setCache(cacheKey, sections, 3600);
+
     res.json({
       success: true,
-      data: sections
+      data: sections,
+      cached: false
     });
   } catch (error) {
     console.error('Error al obtener secciones:', error);
@@ -185,6 +329,8 @@ const getSections = async (req, res) => {
 };
 
 module.exports = {
+  getPublicContent,
+  getAllPublicContent,
   getContent,
   getAllContent,
   updateContent,

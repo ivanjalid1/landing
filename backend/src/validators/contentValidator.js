@@ -4,7 +4,7 @@ exports.contentSchema = yup.object().shape({
   section: yup
     .string()
     .required('La sección es requerida')
-    .oneOf(['hero', 'benefits', 'services', 'testimonials', 'faq', 'contact', 'seo'], 'Sección inválida'),
+    .oneOf(['hero', 'benefits', 'services', 'faq', 'contact', 'seo'], 'Sección inválida'),
   
   key: yup
     .string()

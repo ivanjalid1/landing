@@ -1,23 +1,30 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import Services from '../components/Services.astro';
 import Accounts from '../components/Accounts.astro';
-import Testimonials from '../components/Testimonials.astro';
 import FAQ from '../components/FAQ.astro';
-import FinalCTA from '../components/FinalCTA.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import { translations } from '../i18n/translations.js';
+import { extractLanguageFromUrl } from '../middleware/i18n.js';
 
-const seoTitle = 'Top Ads - Servicios Premium de Marketing Digital';
-const seoDescription = 'Potencia tus campañas publicitarias con nuestras cuentas premium verificadas y servicios de marketing digital de alto rendimiento. ROI garantizado.';
+const currentLang = extractLanguageFromUrl(Astro.url.pathname);
+const t = translations[currentLang as keyof typeof translations];
 ---
 
-<Layout title={seoTitle} description={seoDescription}>
+<Layout
+  title={t?.meta?.title || "Top Ads - Tu agencia #1 en activos publicitarios"}
+  description={t?.meta?.description || "Transformamos tu negocio con estrategias digitales innovadoras. Somos tu partner estratégico para escalar tu negocio digital con cuentas premium verificadas y gestión completa de campañas."}
+>
+  <Header currentLang={currentLang} />
   <main>
     <Hero />
     <Services />
     <Accounts />
-    <Testimonials />
+    <Contact />
     <FAQ />
-    <FinalCTA />
   </main>
+  <Footer />
 </Layout> 

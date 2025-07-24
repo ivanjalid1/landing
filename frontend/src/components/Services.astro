@@ -1,120 +1,192 @@
 ---
-// Cargar contenido dinámicamente desde el backend
-let servicesContent = {
-  title: "Nuestros Servicios Premium",
-  subtitle: "Soluciones especializadas para escalar tu negocio digital",
-  services: [
-    {
-      title: "Cuentas Premium",
-      description: "Acceso a cuentas verificadas con historial limpio",
-      icon: "shield-check"
-    },
-    {
-      title: "Gestión de Campañas",
-      description: "Optimización profesional de tus campañas publicitarias",
-      icon: "chart-line"
-    },
-    {
-      title: "Soporte Técnico",
-      description: "Asistencia especializada para resolver cualquier problema",
-      icon: "headset"
-    }
-  ]
-};
+import { translations } from '../i18n/translations.js';
+import { extractLanguageFromUrl } from '../middleware/i18n.js';
 
-try {
-  const response = await fetch('http://localhost:5000/api/content/services');
-  if (response.ok) {
-    const data = await response.json();
-    if (data.success && data.data?.data) {
-      servicesContent = data.data.data;
-    }
+const currentLang = extractLanguageFromUrl(Astro.url.pathname);
+const t = translations[currentLang as keyof typeof translations];
+
+const services = [
+  {
+    id: 'premium-accounts',
+    title: t?.services?.premium?.title || "Cuentas Premium",
+    description: t?.services?.premium?.description || "Acceso inmediato a cuentas verificadas con historial limpio y límites elevados para Facebook Ads, Instagram Ads y TikTok Ads.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+    </svg>`,
+    features: [
+      "Cuentas BM Verificadas",
+      "Límites $10k-$50k/día",
+      "Soporte 24/7",
+      "Garantía 30-90 días",
+      "Shopping Habilitado",
+      "Pixel Tracking"
+    ],
+    stats: {
+      value: "5min",
+      label: "Tiempo de entrega",
+      trend: "+99.9%",
+      trendLabel: "Tasa de éxito"
+    },
+    badge: "Más Popular",
+    accent: "cyan"
+  },
+  {
+    id: 'campaign-management',
+    title: "Gestión de Campañas",
+    description: "Optimización continua de campañas publicitarias con estrategias avanzadas de segmentación y análisis de datos en tiempo real.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+    </svg>`,
+    features: [
+      "Optimización diaria",
+      "A/B Testing avanzado",
+      "Reportes en tiempo real",
+      "Segmentación IA",
+      "Creative Testing",
+      "ROI Tracking"
+    ],
+    stats: {
+      value: "350%",
+      label: "ROI Promedio",
+      trend: "+42%",
+      trendLabel: "vs Mercado"
+    },
+    badge: "Top ROI",
+    accent: "purple"
+  },
+  {
+    id: 'automation',
+    title: "Automatización & IA",
+    description: "Sistemas inteligentes de automatización que optimizan tus campañas 24/7 utilizando algoritmos de machine learning y análisis predictivo.",
+    icon: `<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+    </svg>`,
+    features: [
+      "Auto-optimización",
+      "Reglas dinámicas",
+      "Alertas inteligentes",
+      "Scaling automático",
+      "Smart Bidding",
+      "Performance AI"
+    ],
+    stats: {
+      value: "24/7",
+      label: "Monitoreo",
+      trend: "-65%",
+      trendLabel: "Tiempo gestión"
+    },
+    badge: "IA Powered",
+    accent: "amber"
   }
-} catch (error) {
-  console.log('Error cargando contenido de servicios:', error);
-}
-
-const services = servicesContent.services || [];
+];
 ---
 
-<section class="py-24 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50" id="services">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section class="relative py-24 bg-tech-900 text-white overflow-hidden" id="services">
+  <!-- Background Effects -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(249,115,22,0.1),transparent)] pointer-events-none"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(249,115,22,0.05),transparent)] pointer-events-none"></div>
+  
+  <!-- Grid Pattern -->
+  <div class="absolute inset-0" style="background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header -->
-    <div class="text-center mb-16 animate-fade-in">
-      <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 mb-6">
-        <span class="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full mr-2 animate-pulse"></span>
-        <span class="text-slate-700 text-sm font-medium">Servicios Premium</span>
+    <div class="text-center mb-20 scroll-reveal">
+      <div class="inline-flex items-center px-4 py-2 rounded-full bg-tech-800/50 border border-tech-700/50 backdrop-blur-sm mb-6">
+        <span class="animate-pulse w-2 h-2 bg-primary-500 rounded-full mr-3"></span>
+        <span class="text-primary-400 text-sm font-medium">Servicios Premium</span>
       </div>
-      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
-        {servicesContent.title}
+
+      <h2 class="text-4xl lg:text-5xl xl:text-6xl font-bold mb-6">
+        Soluciones <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 animate-gradient-x">Premium</span>
       </h2>
-      <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-        {servicesContent.subtitle}
+
+      <p class="text-xl text-tech-300 max-w-3xl mx-auto mb-12">
+        Descubre nuestras soluciones premium diseñadas para maximizar tu rendimiento publicitario
       </p>
     </div>
 
-    <!-- Services Grid -->
-    <div class="grid lg:grid-cols-3 gap-8">
+    <!-- Services List -->
+    <div class="max-w-6xl mx-auto">
       {services.map((service, index) => (
-        <div class="group relative animate-fade-in-up" style={`animation-delay: ${index * 0.2}s`}>
-          {/* Card Background */}
-          <div class="absolute inset-0 bg-white/80 rounded-3xl border border-slate-200 backdrop-blur-xl shadow-lg"></div>
-          
-          {/* Card Content */}
-          <div class="relative p-8 h-full">
-            {/* Icon */}
-            <div class="inline-flex p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-6 group-hover:scale-110 transition-transform duration-300">
-              <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {service.icon === "shield-check" && (
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                )}
-                {service.icon === "chart-line" && (
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                )}
-                {service.icon === "headset" && (
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                )}
-              </svg>
-            </div>
-            
-            {/* Title & Description */}
-            <h3 class="text-2xl font-bold text-slate-800 mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-cyan-600 group-hover:bg-clip-text transition-all duration-300">
-              {service.title}
-            </h3>
-            
-            <p class="text-slate-600 mb-8 leading-relaxed">
-              {service.description}
-            </p>
-
-            {/* Features */}
-            {service.features && (
-              <div class="space-y-4 mb-8">
-                {service.features.map((feature) => (
-                  <div class="flex items-start text-slate-700 hover:text-slate-900 transition-colors duration-200">
-                    <div class="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mr-3 mt-0.5">
-                      <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                      </svg>
-                    </div>
-                    <span class="text-sm">{feature}</span>
+        <div class="relative mb-24 last:mb-0 scroll-reveal">
+          <div class="absolute -inset-[1px] bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl opacity-30 group-hover:opacity-100 transition duration-300"></div>
+          <div class="relative bg-tech-800/50 rounded-2xl p-8 border border-tech-700/50">
+            <!-- Service Header -->
+            <div class="flex items-start gap-8 mb-12">
+              <div class="relative flex-shrink-0">
+                <div class="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-primary-600/20 rounded-2xl blur-lg"></div>
+                <div class="relative w-20 h-20 flex items-center justify-center rounded-2xl bg-gradient-to-r from-primary-500 to-primary-600">
+                  <div class="text-white transform scale-110" set:html={service.icon} />
+                </div>
+              </div>
+              
+              <div class="flex-1">
+                {service.badge && (
+                  <div class="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 mb-4">
+                    <span class="text-sm font-medium text-white">{service.badge}</span>
                   </div>
-                ))}
+                )}
+                <h3 class="text-3xl font-bold text-white mb-4">{service.title}</h3>
+                <p class="text-xl text-tech-300 max-w-3xl">{service.description}</p>
               </div>
-            )}
 
-            {/* Stats */}
-            {service.stats && (
-              <div class="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl">
-                <div>
-                  <p class="text-sm text-slate-600">{service.stats.label}</p>
-                  <p class="text-2xl font-bold text-slate-800">{service.stats.value}</p>
+              <div class="flex-shrink-0 text-right">
+                <div class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-500 mb-2">
+                  {service.stats.value}
                 </div>
-                <div class="text-right">
-                  <p class="text-sm text-green-600 font-semibold">{service.stats.trend}</p>
+                <div class="text-tech-400">{service.stats.label}</div>
+                <div class="flex items-center justify-end mt-2">
+                  <svg class="w-4 h-4 text-primary-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                  </svg>
+                  <span class="text-sm text-primary-400 font-medium">{service.stats.trend}</span>
+                  <span class="text-sm text-tech-400 ml-1">{service.stats.trendLabel}</span>
                 </div>
               </div>
-            )}
+            </div>
+
+            <!-- Service Features -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+              {service.features.map((feature, featureIndex) => (
+                <div class="group relative scroll-reveal" style={`--delay: ${featureIndex * 0.1}s`}>
+                  <div class="absolute -inset-4 bg-gradient-to-r from-primary-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+                  <div class="relative flex items-start gap-4">
+                    <div class="relative w-8 h-8 flex-shrink-0">
+                      <div class="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-primary-600/20 rounded-full blur-sm transform group-hover:scale-110 transition-transform duration-300"></div>
+                      <div class="relative w-8 h-8 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <span class="text-lg text-tech-300 group-hover:text-primary-400 transition-colors duration-300">
+                      {feature}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <!-- Service CTA -->
+            <div class="mt-12 flex justify-end scroll-reveal">
+              <a 
+                href="#contact" 
+                class="group relative inline-flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl overflow-hidden shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 hover:scale-105"
+                onclick="scrollToSection(event, 'contact')"
+              >
+                <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span class="relative font-semibold text-lg">Solicitar Ahora</span>
+                <svg class="relative w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                </svg>
+              </a>
+            </div>
           </div>
+
+          {index !== services.length - 1 && (
+            <div class="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-tech-700/50 to-transparent"></div>
+          )}
         </div>
       ))}
     </div>
@@ -122,27 +194,52 @@ const services = servicesContent.services || [];
 </section>
 
 <style>
-  @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
   }
-  
-  @keyframes fade-in-up {
-    from { 
-      opacity: 0; 
-      transform: translateY(30px); 
-    }
-    to { 
-      opacity: 1; 
-      transform: translateY(0); 
-    }
+  50% {
+    background-position: 100% 50%;
   }
-  
-  .animate-fade-in {
-    animation: fade-in 1s ease-out;
+  100% {
+    background-position: 0% 50%;
   }
-  
-  .animate-fade-in-up {
-    animation: fade-in-up 0.8s ease-out forwards;
-  }
-</style> 
+}
+
+.animate-gradient-x {
+  animation: gradient-x 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+  animation-delay: var(--delay, 0s);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+
+<script>
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, observerOptions);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+    scrollRevealElements.forEach(el => observer.observe(el));
+  });
+</script> 

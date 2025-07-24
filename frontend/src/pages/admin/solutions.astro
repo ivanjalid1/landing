@@ -7,14 +7,14 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
   <ContentEditor 
     client:load
     section="solutions"
-    title="Editar Sección Soluciones Enterprise"
-    description="Modifica el contenido de la sección de soluciones enterprise y casos de uso"
+    title="Editar Soluciones Enterprise"
+    description="Modifica las soluciones técnicas para empresas"
     fields={[
       {
         name: 'title',
-        label: 'Título Principal',
+        label: 'Título de la Sección',
         type: 'text',
-        placeholder: 'Ej: Enterprise Solutions & Business Cases',
+        placeholder: 'Ej: Soluciones Enterprise',
         required: true
       },
       {
@@ -27,53 +27,63 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
       },
       {
         name: 'solutions',
-        label: 'Soluciones Enterprise',
+        label: 'Lista de Soluciones',
         type: 'array',
         itemLabel: 'Solución',
-        required: true,
         template: {
           title: '',
           description: '',
-          features: '',
-          price: '',
-          isPopular: false
+          icon: 'fas fa-building',
+          benefits: [],
+          buttonText: 'Solicitar Demo',
+          buttonLink: '#contact'
         },
         fields: [
           {
             name: 'title',
             label: 'Título de la Solución',
             type: 'text',
-            placeholder: 'Ej: Facebook Ads Enterprise',
-            required: true
+            placeholder: 'Ej: Gestión de Campañas'
           },
           {
             name: 'description',
             label: 'Descripción',
             type: 'textarea',
             placeholder: 'Descripción detallada de la solución...',
-            rows: 3,
-            required: true
+            rows: 4
           },
           {
-            name: 'features',
-            label: 'Características (una por línea)',
-            type: 'textarea',
-            placeholder: 'Característica 1\nCaracterística 2\nCaracterística 3',
-            rows: 4,
-            required: true
-          },
-          {
-            name: 'price',
-            label: 'Precio',
+            name: 'icon',
+            label: 'Icono (FontAwesome)',
             type: 'text',
-            placeholder: 'Ej: $999/mes o Contactar',
-            required: true
+            placeholder: 'Ej: fas fa-chart-line'
           },
           {
-            name: 'isPopular',
-            label: 'Marcar como Popular',
-            type: 'checkbox',
-            required: false
+            name: 'buttonText',
+            label: 'Texto del Botón',
+            type: 'text',
+            placeholder: 'Ej: Solicitar Demo'
+          },
+          {
+            name: 'buttonLink',
+            label: 'Enlace del Botón',
+            type: 'text',
+            placeholder: 'Ej: #contact, #servicios, https://t.me/..., o /demo'
+          },
+          {
+            name: 'benefits',
+            label: 'Beneficios',
+            type: 'array',
+            itemLabel: 'Beneficio',
+            template: '',
+            fields: [
+              {
+                name: 'text',
+                label: 'Texto',
+                type: 'text',
+                placeholder: 'Ej: Aumento del 300% en ROI'
+              }
+            ]
           }
         ]
       }

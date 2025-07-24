@@ -1,113 +1,104 @@
 ---
-const navigation = [
-  { name: 'Servicios', href: '#servicios' },
-  { name: 'Cuentas Premium', href: '#cuentas' },
-  { name: 'Testimonios', href: '#testimonios' },
-  { name: 'FAQ', href: '#faq' },
-];
+import { translations } from '../i18n/translations.js';
+import { extractLanguageFromUrl } from '../middleware/i18n.js';
+
+const currentLang = extractLanguageFromUrl(Astro.url.pathname);
+const t = translations[currentLang as keyof typeof translations];
 ---
 
-<header class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-100">
-  <nav class="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
+<nav class="bg-tech-900/90 backdrop-blur-lg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       <!-- Logo -->
       <div class="flex-shrink-0">
-        <a href="/" class="flex items-center">
-          <img class="h-8 w-auto" src="/images/logo.svg" alt="Top Ads Logo" />
-          <span class="ml-2 text-xl font-bold text-gray-900">Top Ads</span>
+        <a href="/" class="text-white font-bold text-xl">TopAds</a>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#services" class="text-tech-300 hover:text-white transition-colors duration-200">
+          {t?.nav?.services || 'Servicios'}
+        </a>
+        <a href="#accounts" class="text-tech-300 hover:text-white transition-colors duration-200">
+          {t?.nav?.accounts || 'Cuentas Premium'}
+        </a>
+        <a href="#faq" class="text-tech-300 hover:text-white transition-colors duration-200">
+          {t?.nav?.faq || 'FAQ'}
+        </a>
+        <a href="#contact" class="text-tech-300 hover:text-white transition-colors duration-200">
+          {t?.nav?.contact || 'Contacto'}
         </a>
       </div>
 
-      <!-- Navigation Links - Hidden on mobile -->
-      <div class="hidden md:flex md:items-center md:space-x-6">
-        {
-          navigation.map((item) => (
-            <a
-              href={item.href}
-              class="text-base font-medium text-gray-700 hover:text-primary-500 transition-colors duration-200"
-            >
-              {item.name}
-            </a>
-          ))
-        }
-      </div>
-
-      <!-- CTA Button -->
-      <div class="flex items-center space-x-4">
-        <a href="#contacto" class="btn-primary">
-          Contactar
-        </a>
-        
-        <!-- Mobile menu button -->
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
         <button
           type="button"
-          class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
           aria-controls="mobile-menu"
           aria-expanded="false"
+          class="text-tech-300 hover:text-white transition-colors duration-200"
         >
-          <span class="sr-only">Abrir menú principal</span>
-          <svg
-            class="block h-6 w-6"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
+          <span class="sr-only">Open main menu</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </div>
     </div>
+  </div>
 
-    <!-- Mobile menu, show/hide based on menu state -->
-    <div class="md:hidden" id="mobile-menu">
-      <div class="pt-2 pb-3 space-y-1">
-        {
-          navigation.map((item) => (
-            <a
-              href={item.href}
-              class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-500 hover:bg-gray-50"
-            >
-              {item.name}
-            </a>
-          ))
-        }
-      </div>
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <a href="#services" class="block px-3 py-2 rounded-md text-base font-medium text-tech-300 hover:text-white hover:bg-tech-800 transition-colors duration-200">
+        {t?.nav?.services || 'Servicios'}
+      </a>
+      <a href="#accounts" class="block px-3 py-2 rounded-md text-base font-medium text-tech-300 hover:text-white hover:bg-tech-800 transition-colors duration-200">
+        {t?.nav?.accounts || 'Cuentas Premium'}
+      </a>
+      <a href="#faq" class="block px-3 py-2 rounded-md text-base font-medium text-tech-300 hover:text-white hover:bg-tech-800 transition-colors duration-200">
+        {t?.nav?.faq || 'FAQ'}
+      </a>
+      <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-tech-300 hover:text-white hover:bg-tech-800 transition-colors duration-200">
+        {t?.nav?.contact || 'Contacto'}
+      </a>
     </div>
-  </nav>
-</header>
+  </div>
+</nav>
 
 <script>
-  // Toggle mobile menu
-  const button = document.querySelector('[aria-controls="mobile-menu"]');
-  const menu = document.getElementById('mobile-menu');
+  import { safeDOM, onClickOutside } from '../utils/browser.js';
 
-  button?.addEventListener('click', () => {
-    const expanded = button.getAttribute('aria-expanded') === 'true';
-    button.setAttribute('aria-expanded', (!expanded).toString());
-    menu?.classList.toggle('hidden');
-  });
+  // Get elements
+  const button = safeDOM.querySelector('[aria-controls="mobile-menu"]');
+  const menu = safeDOM.getElementById('mobile-menu');
 
-  // Close mobile menu when clicking outside
-  document.addEventListener('click', (event) => {
-    const target = event.target as Node;
-    if (menu && !menu.contains(target) && button && !button.contains(target)) {
-      menu.classList.add('hidden');
-      button.setAttribute('aria-expanded', 'false');
-    }
-  });
+  // Toggle menu
+  if (button && menu) {
+    safeDOM.addEventListener(button, 'click', () => {
+      const expanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', (!expanded).toString());
+      menu.classList.toggle('hidden');
 
-  // Close mobile menu when clicking on a link
-  menu?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      menu.classList.add('hidden');
-      button?.setAttribute('aria-expanded', 'false');
+      // Update icon
+      const icon = button.querySelector('svg');
+      if (icon) {
+        if (expanded) {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+        } else {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+        }
+      }
     });
-  });
+
+    // Close menu when clicking outside
+    onClickOutside(menu, () => {
+      button.setAttribute('aria-expanded', 'false');
+      menu.classList.add('hidden');
+      const icon = button.querySelector('svg');
+      if (icon) {
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />';
+      }
+    });
+  }
 </script> 

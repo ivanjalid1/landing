@@ -1,110 +1,284 @@
 ---
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
+import { translations } from '../i18n/translations.js';
+import { extractLanguageFromUrl } from '../middleware/i18n.js';
+
 interface Props {
   title: string;
   description: string;
 }
 
 const { title, description } = Astro.props;
-
-const currentYear = new Date().getFullYear();
+const currentLang = extractLanguageFromUrl(Astro.url.pathname);
+const t = translations[currentLang as keyof typeof translations];
 ---
 
-<!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<!doctype html>
+<html lang={currentLang || 'es'}>
   <head>
     <meta charset="UTF-8" />
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <meta name="description" content={description} />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content="/og-image.jpg" />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content="/og-image.jpg" />
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <ViewTransitions />
   </head>
-  <body class="font-sans antialiased pt-20">
-    <Header />
+  <body class="overflow-x-hidden">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 z-[9999] bg-tech-900 flex items-center justify-center">
+      <div class="relative">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl blur animate-pulse"></div>
+        <div class="relative w-16 h-16 rounded-xl bg-white flex items-center justify-center">
+          <span class="text-transparent bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text font-bold text-4xl">T</span>
+        </div>
+      </div>
+    </div>
+
     <slot />
-    <Footer />
-
-    <style is:global>
-      :root {
-        --primary-50: #fff7ed;
-        --primary-100: #ffedd5;
-        --primary-200: #fed7aa;
-        --primary-300: #fdba74;
-        --primary-400: #fb923c;
-        --primary-500: #f97316;
-        --primary-600: #ea580c;
-        --primary-700: #c2410c;
-        --primary-800: #9a3412;
-        --primary-900: #7c2d12;
-        --primary-950: #431407;
-      }
-
-      html {
-        font-family: 'Inter', system-ui, sans-serif;
-      }
-
-      .container {
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-
-      @media (min-width: 640px) {
-        .container {
-          max-width: 640px;
-        }
-      }
-
-      @media (min-width: 768px) {
-        .container {
-          max-width: 768px;
-        }
-      }
-
-      @media (min-width: 1024px) {
-        .container {
-          max-width: 1024px;
-        }
-      }
-
-      @media (min-width: 1280px) {
-        .container {
-          max-width: 1280px;
-        }
-      }
-
-      @media (min-width: 1536px) {
-        .container {
-          max-width: 1536px;
-        }
-      }
-    </style>
   </body>
-</html> 
+</html>
+
+<style is:global>
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scale-up {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-fade-in {
+  opacity: 0;
+  animation: fade-in 1s ease-out forwards;
+}
+
+.animate-slide-up {
+  opacity: 0;
+  animation: slide-up 1s ease-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+.animate-slide-down {
+  opacity: 0;
+  animation: slide-down 1s ease-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+.animate-slide-left {
+  opacity: 0;
+  animation: slide-left 1s ease-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+.animate-slide-right {
+  opacity: 0;
+  animation: slide-right 1s ease-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+.animate-scale-up {
+  opacity: 0;
+  animation: scale-up 1s ease-out forwards;
+  animation-delay: var(--delay, 0s);
+}
+
+.animate-gradient-x {
+  animation: gradient-x 15s ease infinite;
+  background-size: 200% 200%;
+}
+
+/* Scroll Reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-reveal-left {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-reveal-left.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-right {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-reveal-right.revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-reveal-scale.revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+</style>
+
+<script>
+  import { safeDOM, onWindowLoad, onDOMContentLoaded, getCurrentPath } from '../utils/browser.js';
+  import { redirectToLanguage } from '../scripts/languageDetection.js';
+
+  // Loading screen
+  onWindowLoad(() => {
+    const loadingScreen = safeDOM.getElementById('loading-screen');
+    if (loadingScreen) {
+      setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          loadingScreen.style.visibility = 'hidden';
+        }, 1000);
+      }, 500);
+    }
+  });
+
+  // Asegurar que el loading screen se oculte también en DOMContentLoaded
+  onDOMContentLoaded(() => {
+    const loadingScreen = safeDOM.getElementById('loading-screen');
+    if (loadingScreen) {
+      setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+          loadingScreen.style.display = 'none';
+          loadingScreen.style.visibility = 'hidden';
+        }, 1000);
+      }, 1000);
+    }
+  });
+
+  // Intersection Observer para animaciones al hacer scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+      }
+    });
+  }, observerOptions);
+
+  // Observar elementos con scroll-reveal
+  onDOMContentLoaded(() => {
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
+    scrollRevealElements.forEach(el => observer.observe(el));
+  });
+
+  // Smooth scroll para enlaces internos
+  onDOMContentLoaded(() => {
+    safeDOM.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      safeDOM.addEventListener(anchor, 'click', function (e) {
+        e.preventDefault();
+        const target = safeDOM.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  });
+
+  // Detección de idioma
+  if (getCurrentPath() === '/') {
+    redirectToLanguage();
+  }
+</script> 

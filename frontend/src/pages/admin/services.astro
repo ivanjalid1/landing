@@ -7,22 +7,22 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
   <ContentEditor 
     client:load
     section="services"
-    title="Editar Sección de Servicios"
-    description="Modifica el título, subtítulo y lista de servicios ofrecidos"
+    title="Editar Sección Servicios"
+    description="Modifica la lista de servicios ofrecidos por tu agencia"
     fields={[
       {
         name: 'title',
         label: 'Título de la Sección',
         type: 'text',
-        placeholder: 'Ej: Nuestros Servicios Premium',
+        placeholder: 'Ej: Nuestros Servicios',
         required: true
       },
       {
         name: 'subtitle',
-        label: 'Subtítulo de la Sección',
+        label: 'Subtítulo',
         type: 'textarea',
         placeholder: 'Descripción general de los servicios...',
-        rows: 2,
+        rows: 3,
         required: true
       },
       {
@@ -33,7 +33,7 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
         template: {
           title: '',
           description: '',
-          icon: '',
+          icon: 'fas fa-cog',
           features: []
         },
         fields: [
@@ -41,20 +41,41 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
             name: 'title',
             label: 'Título del Servicio',
             type: 'text',
-            placeholder: 'Ej: Cuentas Premium'
+            placeholder: 'Ej: Gestión de Anuncios'
           },
           {
             name: 'description',
-            label: 'Descripción del Servicio',
+            label: 'Descripción',
             type: 'textarea',
             placeholder: 'Descripción detallada del servicio...',
             rows: 3
           },
           {
             name: 'icon',
-            label: 'Icono (clase CSS)',
+            label: 'Icono (FontAwesome)',
             type: 'text',
-            placeholder: 'Ej: shield-check, chart-line, headset'
+            placeholder: 'Ej: fas fa-ad'
+          },
+          {
+            name: 'price',
+            label: 'Precio',
+            type: 'text',
+            placeholder: 'Ej: Desde $99/mes'
+          },
+          {
+            name: 'features',
+            label: 'Características',
+            type: 'array',
+            itemLabel: 'Característica',
+            template: '',
+            fields: [
+              {
+                name: 'text',
+                label: 'Texto',
+                type: 'text',
+                placeholder: 'Ej: Optimización automática'
+              }
+            ]
           }
         ]
       }

@@ -1,86 +1,189 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  AreaChart,
+  Area
+} from 'recharts';
 
 const AnalyticsDashboard = () => {
-  const [analytics, setAnalytics] = useState({
-    overview: {
-      totalRevenue: 0,
-      totalAccounts: 0,
-      activeCampaigns: 0,
-      conversionRate: 0
-    },
-    monthlyStats: [],
-    topPerforming: [],
-    recentActivity: []
-  });
+  const [timeRange, setTimeRange] = useState('7d');
   const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState('30d');
+  const canvasRef = useRef(null);
+  const graphData = {
+    '7d': {
+      before: [35, 38, 32, 42, 37, 34, 40],
+      after: [65, 72, 68, 85, 78, 75, 88],
+      labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
+    },
+    '14d': {
+      before: [38, 42, 36, 45, 40, 37, 43, 39, 41, 38, 44, 41, 43, 45],
+      after: [70, 75, 72, 88, 82, 78, 85, 80, 83, 79, 87, 84, 86, 90],
+      labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14']
+    }
+  };
+
+  // Referencias para animación de números
+  const roiRef = useRef(null);
+  const convRef = useRef(null);
+  const ctrRef = useRef(null);
+  const campRef = useRef(null);
+  const invRef = useRef(null);
 
   useEffect(() => {
-    loadAnalytics();
+    // Inicializar animaciones y gráfico
+    animateNumbers();
+    const timer = setTimeout(() => {
+      updateGraph();
+      setLoading(false);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [timeRange]);
 
-  const loadAnalytics = async () => {
-    try {
-      setLoading(true);
-      // Simular datos de analytics (en producción vendría de la API)
-      const mockData = {
-        overview: {
-          totalRevenue: 15420,
-          totalAccounts: 47,
-          activeCampaigns: 12,
-          conversionRate: 23.5
-        },
-        monthlyStats: [
-          { month: 'Ene', revenue: 3200, accounts: 8, campaigns: 3 },
-          { month: 'Feb', revenue: 4100, accounts: 12, campaigns: 4 },
-          { month: 'Mar', revenue: 3800, accounts: 10, campaigns: 3 },
-          { month: 'Abr', revenue: 5200, accounts: 15, campaigns: 5 },
-          { month: 'May', revenue: 6100, accounts: 18, campaigns: 6 },
-          { month: 'Jun', revenue: 7200, accounts: 22, campaigns: 7 }
-        ],
-        topPerforming: [
-          { name: 'Facebook Ads Premium', revenue: 4200, growth: 15.2 },
-          { name: 'Instagram Business', revenue: 3800, growth: 12.8 },
-          { name: 'Google Ads Enterprise', revenue: 3200, growth: 8.5 },
-          { name: 'TikTok Ads Pro', revenue: 2800, growth: 22.1 }
-        ],
-        recentActivity: [
-          { type: 'sale', message: 'Nueva venta: Facebook Ads Premium', amount: 299, time: '2h' },
-          { type: 'support', message: 'Soporte técnico resuelto', time: '4h' },
-          { type: 'account', message: 'Cuenta verificada entregada', time: '6h' },
-          { type: 'campaign', message: 'Campaña optimizada', time: '8h' }
-        ]
+  useEffect(() => {
+    // Manejar resize del gráfico
+    const handleResize = () => {
+      updateGraph();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const animateNumbers = () => {
+    const animateValue = (ref, start, end, duration = 2000) => {
+      if (!ref.current) return;
+      
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const current = Math.floor(progress === 1 ? end : (start + (end - start) * easeOutQuart));
+        
+        if (ref.current) {
+          ref.current.textContent = current + (ref === ctrRef ? '%' : '');
+        }
+        
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        }
       };
       
-      setAnalytics(mockData);
-    } catch (error) {
-      console.error('Error cargando analytics:', error);
-    } finally {
-      setLoading(false);
-    }
+      window.requestAnimationFrame(step);
+    };
+
+    // Animar cada número
+    animateValue(roiRef, 0, 350);
+    animateValue(convRef, 0, 127.4);
+    animateValue(ctrRef, 0, 4.8);
+    animateValue(campRef, 0, 10547);
+    animateValue(invRef, 0, 847.5);
   };
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
-  };
+  const updateGraph = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const getActivityIcon = (type) => {
-    switch (type) {
-      case 'sale': return 'fas fa-shopping-cart text-green-600';
-      case 'support': return 'fas fa-headset text-blue-600';
-      case 'account': return 'fas fa-user-check text-purple-600';
-      case 'campaign': return 'fas fa-chart-line text-orange-600';
-      default: return 'fas fa-info-circle text-gray-600';
-    }
+    const ctx = canvas.getContext('2d');
+    const data = graphData[timeRange];
+    
+    // Obtener dimensiones reales del canvas
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = rect.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    
+    // Limpiar canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Configurar estilos
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // Dibujar línea optimizada
+    ctx.beginPath();
+    ctx.strokeStyle = '#f97316';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([]);
+    
+    const drawLine = (points, isAfter = true) => {
+      const width = rect.width;
+      const height = rect.height;
+      const maxValue = Math.max(...data.after, ...data.before);
+      const padding = 30;
+
+      points.forEach((value, index) => {
+        const x = padding + (width - padding * 2) * (index / (points.length - 1));
+        const y = height - (padding + (height - padding * 2) * (value / maxValue));
+        
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+
+      if (isAfter) {
+        // Agregar glow para la línea optimizada
+        ctx.shadowColor = '#f97316';
+        ctx.shadowBlur = 10;
+        ctx.strokeStyle = '#f97316';
+      } else {
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = '#475569';
+        ctx.setLineDash([5, 5]);
+      }
+      
+      ctx.stroke();
+    };
+
+    // Dibujar líneas
+    drawLine(data.after, true);
+    ctx.beginPath();
+    drawLine(data.before, false);
+
+    // Dibujar etiquetas
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    const padding = 30;
+    
+    data.labels.forEach((label, index) => {
+      const x = padding + (rect.width - padding * 2) * (index / (data.labels.length - 1));
+      ctx.fillText(label, x, rect.height - 10);
+    });
+
+    // Dibujar puntos de datos
+    data.after.forEach((value, index) => {
+      const x = padding + (rect.width - padding * 2) * (index / (data.after.length - 1));
+      const y = rect.height - (padding + (rect.height - padding * 2) * (value / Math.max(...data.after, ...data.before)));
+      
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#f97316';
+      ctx.fill();
+      
+      // Punto de glow
+      ctx.beginPath();
+      ctx.arc(x, y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(249, 115, 22, 0.3)';
+      ctx.fill();
+    });
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -88,205 +191,116 @@ const AnalyticsDashboard = () => {
   return (
     <div className="space-y-6">
       {/* Header con filtros */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Analytics & Estadísticas</h1>
-            <p className="text-gray-600">Métricas de rendimiento y estadísticas de publicidad</p>
+            <h1 className="text-2xl font-bold text-white">Analytics & Estadísticas</h1>
+            <p className="text-tech-300">Métricas de rendimiento y estadísticas de publicidad</p>
           </div>
           <div className="flex items-center space-x-4">
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 bg-tech-800/50 border border-tech-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="7d">Últimos 7 días</option>
-              <option value="30d">Últimos 30 días</option>
-              <option value="90d">Últimos 90 días</option>
-              <option value="1y">Último año</option>
+              <option value="14d">Últimos 14 días</option>
             </select>
-            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-              <i className="fas fa-download mr-2"></i>
-              Exportar
-            </button>
           </div>
         </div>
       </div>
 
       {/* Métricas principales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-green-100 text-green-600">
-              <i className="fas fa-dollar-sign text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(analytics.overview.totalRevenue)}</p>
-              <p className="text-sm text-green-600">+12.5% vs mes anterior</p>
-            </div>
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
+          <div className="text-tech-400 text-sm mb-1">ROI Promedio</div>
+          <div className="text-xl font-bold text-white mb-1 group-hover:text-primary-400 transition-colors duration-300">
+            <span ref={roiRef}>350</span>%
+          </div>
+          <div className="flex items-center gap-1 text-primary-500 text-sm">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+            <span>+42%</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-blue-100 text-blue-600">
-              <i className="fas fa-user-shield text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Cuentas Activas</p>
-              <p className="text-2xl font-bold text-gray-900">{analytics.overview.totalAccounts}</p>
-              <p className="text-sm text-blue-600">+8 nuevas este mes</p>
-            </div>
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
+          <div className="text-tech-400 text-sm mb-1">Conversiones</div>
+          <div className="text-xl font-bold text-white mb-1 group-hover:text-primary-400 transition-colors duration-300">
+            <span ref={convRef}>127.4</span>%
+          </div>
+          <div className="flex items-center gap-1 text-primary-500 text-sm">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+            <span>+23%</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-purple-100 text-purple-600">
-              <i className="fas fa-chart-line text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Campañas Activas</p>
-              <p className="text-2xl font-bold text-gray-900">{analytics.overview.activeCampaigns}</p>
-              <p className="text-sm text-purple-600">+3 nuevas campañas</p>
-            </div>
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
+          <div className="text-tech-400 text-sm mb-1">CTR</div>
+          <div className="text-xl font-bold text-white mb-1 group-hover:text-primary-400 transition-colors duration-300">
+            <span ref={ctrRef}>4.8</span>%
           </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-orange-100 text-orange-600">
-              <i className="fas fa-percentage text-xl"></i>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Tasa de Conversión</p>
-              <p className="text-2xl font-bold text-gray-900">{analytics.overview.conversionRate}%</p>
-              <p className="text-sm text-orange-600">+2.1% vs mes anterior</p>
-            </div>
+          <div className="flex items-center gap-1 text-primary-500 text-sm">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+            <span>+15%</span>
           </div>
         </div>
       </div>
 
-      {/* Gráficos y estadísticas */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Gráfico de ingresos mensuales */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Ingresos Mensuales</h3>
-          <div className="space-y-4">
-            {analytics.monthlyStats.map((stat, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-600">{stat.month}</span>
-                <div className="flex items-center space-x-4">
-                  <div className="w-32 bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full" 
-                      style={{ width: `${(stat.revenue / 8000) * 100}%` }}
-                    ></div>
-                  </div>
-                  <span className="text-sm font-medium text-gray-900">{formatCurrency(stat.revenue)}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Productos mejor rendimiento */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Mejor Rendimiento</h3>
-          <div className="space-y-4">
-            {analytics.topPerforming.map((product, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-gray-900">{product.name}</p>
-                  <p className="text-sm text-gray-600">+{product.growth}% crecimiento</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold text-gray-900">{formatCurrency(product.revenue)}</p>
-                  <p className="text-sm text-green-600">+{product.growth}%</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Actividad reciente */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Actividad Reciente</h3>
-        <div className="space-y-3">
-          {analytics.recentActivity.map((activity, index) => (
-            <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-              <div className={`p-2 rounded-full bg-white`}>
-                <i className={`${getActivityIcon(activity.type)}`}></i>
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{activity.message}</p>
-                <p className="text-xs text-gray-600">Hace {activity.time}</p>
-              </div>
-              {activity.amount && (
-                <span className="text-sm font-semibold text-green-600">
-                  {formatCurrency(activity.amount)}
-                </span>
-              )}
+      {/* Gráfico de conversión */}
+      <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-lg font-semibold text-white">Tasa de Conversión</h3>
+            <div className="flex items-center gap-1 text-primary-500 text-sm">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+              <span>+85%</span>
             </div>
-          ))}
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-primary-500"></div>
+              <span className="text-xs text-tech-300">Optimizado</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-tech-600"></div>
+              <span className="text-xs text-tech-300">Sin optimizar</span>
+            </div>
+          </div>
+        </div>
+        <div className="graph-container">
+          <canvas
+            ref={canvasRef}
+            className="w-full h-full"
+          />
         </div>
       </div>
 
       {/* Métricas adicionales */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h4 className="font-semibold text-gray-900 mb-3">Métricas de Campañas</h4>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">CTR Promedio</span>
-              <span className="text-sm font-medium">2.4%</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">CPC Promedio</span>
-              <span className="text-sm font-medium">$0.85</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">ROAS Promedio</span>
-              <span className="text-sm font-medium">3.2x</span>
-            </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
+          <div className="flex items-center justify-between mb-1">
+            <div className="text-tech-400 text-sm">Campañas Activas</div>
+            <div className="text-primary-500 text-sm">+12.5%</div>
+          </div>
+          <div className="text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-300">
+            <span ref={campRef}>10,547</span>
           </div>
         </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h4 className="font-semibold text-gray-900 mb-3">Soporte Técnico</h4>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Tickets Abiertos</span>
-              <span className="text-sm font-medium">5</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Tiempo Respuesta</span>
-              <span className="text-sm font-medium">2.3h</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Satisfacción</span>
-              <span className="text-sm font-medium">4.8/5</span>
-            </div>
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
+          <div className="flex items-center justify-between mb-1">
+            <div className="text-tech-400 text-sm">Inversión Total</div>
+            <div className="text-primary-500 text-sm">+28.4%</div>
           </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h4 className="font-semibold text-gray-900 mb-3">Cuentas Premium</h4>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Disponibles</span>
-              <span className="text-sm font-medium">23</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">En Verificación</span>
-              <span className="text-sm font-medium">8</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Tiempo Entrega</span>
-              <span className="text-sm font-medium">2.1h</span>
-            </div>
+          <div className="text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-300">
+            $<span ref={invRef}>847.5</span>K
           </div>
         </div>
       </div>

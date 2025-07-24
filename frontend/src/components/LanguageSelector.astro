@@ -1,0 +1,76 @@
+---
+import { languages, supportedLanguages } from '../i18n/translations.js';
+
+export interface Props {
+  currentLang: string;
+  class?: string;
+}
+
+const { currentLang, class: className = '' } = Astro.props;
+---
+
+<div class={`language-selector relative ${className}`}>
+  <button
+    id="language-toggle"
+    class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white/90 backdrop-blur-sm border border-slate-200/50 shadow-sm hover:shadow-md transition-all duration-200 text-slate-700 hover:text-slate-900"
+    aria-label="Select language"
+  >
+    <span class="text-lg">{languages[currentLang as keyof typeof languages]?.flag || '🌐'}</span>
+    <span class="text-sm font-medium hidden sm:inline">{languages[currentLang as keyof typeof languages]?.name || 'Language'}</span>
+    <svg class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+
+  <div
+    id="language-dropdown"
+    class="absolute top-full mt-2 right-0 w-48 bg-white rounded-lg shadow-lg border border-slate-200/50 backdrop-blur-sm hidden"
+  >
+    <div class="p-2">
+      {supportedLanguages.map(lang => (
+        <a
+          href={lang === 'es' ? '/' : `/${lang}`}
+          class={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors duration-200 ${
+            currentLang === lang ? 'bg-purple-50 text-purple-700' : 'text-slate-700'
+          } hover:bg-purple-50 hover:text-purple-700`}
+        >
+          <span class="text-lg">{languages[lang as keyof typeof languages]?.flag}</span>
+          <span class="text-sm font-medium">{languages[lang as keyof typeof languages]?.name}</span>
+          {currentLang === lang && (
+            <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          )}
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  import { safeDOM, onClickOutside } from '../utils/browser.js';
+
+  // Get elements
+  const toggle = safeDOM.getElementById('language-toggle');
+  const dropdown = safeDOM.getElementById('language-dropdown');
+
+  // Toggle dropdown
+  if (toggle && dropdown) {
+    safeDOM.addEventListener(toggle, 'click', () => {
+      dropdown.classList.toggle('hidden');
+      const arrow = toggle.querySelector('svg');
+      if (arrow) {
+        arrow.style.transform = dropdown.classList.contains('hidden') ? '' : 'rotate(180deg)';
+      }
+    });
+
+    // Close dropdown when clicking outside
+    onClickOutside(dropdown, () => {
+      dropdown.classList.add('hidden');
+      const arrow = toggle.querySelector('svg');
+      if (arrow) {
+        arrow.style.transform = '';
+      }
+    });
+  }
+</script> 

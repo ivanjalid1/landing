@@ -1,8 +1,13 @@
 ---
-// No props needed for this component
+import { translations } from '../i18n/translations.js';
+import { extractLanguageFromUrl } from '../middleware/i18n.js';
+
+// Detectar idioma actual
+const currentLang = extractLanguageFromUrl(Astro.url.pathname);
+const t = translations[currentLang as keyof typeof translations];
 ---
 
-<section class="relative py-24 overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50" id="contact">
+<section class="relative py-24 overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50" id="contact" style="opacity: 1 !important; visibility: visible !important;">
   <!-- Background Elements -->
   <div class="absolute inset-0">
     <div class="absolute top-0 left-1/4 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
@@ -11,21 +16,33 @@
   </div>
 
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16 animate-fade-in">
+    <div class="text-center mb-16" style="opacity: 1 !important;">
       <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 mb-6">
-        <span class="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full mr-2 animate-pulse"></span>
-        <span class="text-slate-700 text-sm font-medium">Contacto Directo</span>
+        <span class="w-2 h-2 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full mr-2"></span>
+        <span class="text-slate-700 text-sm font-medium">
+          {currentLang === 'es' ? 'Contacto Directo' : 
+           currentLang === 'en' ? 'Direct Contact' : 
+           'Прямой Контакт'}
+        </span>
       </div>
-      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight">
-        ¿Listo para <span class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">Escalar</span> tu Negocio?
+      <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-800 mb-6 leading-tight" style="opacity: 1 !important;">
+        {currentLang === 'es' ? (
+          <>¿Listo para <span class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">Escalar</span> tu Negocio?</>
+        ) : currentLang === 'en' ? (
+          <>Ready to <span class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">Scale</span> your Business?</>
+        ) : (
+          <>Готовы <span class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">Масштабировать</span> ваш Бизнес?</>
+        )}
       </h2>
-      <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8">
-        Únete a cientos de empresas que ya han transformado su marketing digital con nuestras soluciones premium
+      <p class="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8" style="opacity: 1 !important;">
+        {currentLang === 'es' ? 'Únete a cientos de empresas que ya han transformado su marketing digital con nuestras soluciones premium' :
+         currentLang === 'en' ? 'Join hundreds of companies that have already transformed their digital marketing with our premium solutions' :
+         'Присоединяйтесь к сотням компаний, которые уже трансформировали свой цифровой маркетинг с нашими премиум решениями'}
       </p>
     </div>
 
     <!-- Main CTA Card -->
-    <div class="relative max-w-4xl mx-auto animate-fade-in-up">
+    <div class="relative max-w-4xl mx-auto" style="opacity: 1 !important;">
       {/* Card Background */}
       <div class="absolute inset-0 bg-white/80 rounded-3xl border border-slate-200 backdrop-blur-xl shadow-2xl"></div>
       
@@ -39,24 +56,32 @@
         </div>
 
         {/* Title */}
-        <h3 class="text-3xl font-bold text-slate-800 mb-4">
-          Respuesta Inmediata Garantizada
+        <h3 class="text-3xl font-bold text-slate-800 mb-4" style="opacity: 1 !important;">
+          {currentLang === 'es' ? 'Respuesta Inmediata Garantizada' : 
+           currentLang === 'en' ? 'Guaranteed Immediate Response' : 
+           'Гарантированный Мгновенный Ответ'}
         </h3>
         
         {/* Description */}
-        <p class="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
-          Nuestro equipo de expertos está disponible 24/7 para resolver todas tus consultas y ayudarte a implementar la mejor estrategia para tu negocio.
+        <p class="text-lg text-slate-600 mb-8 max-w-2xl mx-auto" style="opacity: 1 !important;">
+          {currentLang === 'es' ? 'Nuestro equipo de expertos está disponible 24/7 para resolver todas tus consultas y ayudarte a implementar la mejor estrategia para tu negocio.' :
+           currentLang === 'en' ? 'Our team of experts is available 24/7 to resolve all your queries and help you implement the best strategy for your business.' :
+           'Наша команда экспертов доступна 24/7 для решения всех ваших вопросов и помощи в реализации лучшей стратегии для вашего бизнеса.'}
         </p>
 
         {/* Features */}
-        <div class="grid md:grid-cols-3 gap-6 mb-10">
+        <div class="grid md:grid-cols-3 gap-6 mb-10" style="opacity: 1 !important;">
           <div class="flex items-center justify-center space-x-3 text-slate-700">
             <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
               <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <span class="font-medium">Respuesta en 5 min</span>
+            <span class="font-medium">
+              {currentLang === 'es' ? 'Respuesta inmediata' : 
+               currentLang === 'en' ? 'Immediate response' : 
+               'Мгновенный ответ'}
+            </span>
           </div>
           <div class="flex items-center justify-center space-x-3 text-slate-700">
             <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
@@ -64,7 +89,11 @@
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <span class="font-medium">Soporte 24/7</span>
+            <span class="font-medium">
+              {currentLang === 'es' ? 'Soporte 24/7' : 
+               currentLang === 'en' ? '24/7 Support' : 
+               '24/7 Поддержка'}
+            </span>
           </div>
           <div class="flex items-center justify-center space-x-3 text-slate-700">
             <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
@@ -72,14 +101,20 @@
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
               </svg>
             </div>
-            <span class="font-medium">Consultoría gratuita</span>
+            <span class="font-medium">
+              {currentLang === 'es' ? 'Consultoría gratuita' : 
+               currentLang === 'en' ? 'Free consultation' : 
+               'Бесплатная консультация'}
+            </span>
           </div>
         </div>
 
         {/* Additional Info */}
         <div class="mb-8 text-center">
-          <p class="text-slate-500 text-sm">
-            💳 Aceptamos VISA, Wise, Payoneer, Bank Transfer, IBAN
+          <p class="text-slate-500 text-sm" style="opacity: 1 !important;">
+            💳 {currentLang === 'es' ? 'Aceptamos VISA, Wise, Payoneer, Transferencia Bancaria, IBAN' :
+                currentLang === 'en' ? 'We accept VISA, Wise, Payoneer, Bank Transfer, IBAN' :
+                'Принимаем VISA, Wise, Payoneer, Банковский перевод, IBAN'}
           </p>
         </div>
 
@@ -90,20 +125,15 @@
     </div>
 
     <!-- Main CTA Button (fuera de la card) -->
-    <div class="mt-12 text-center animate-fade-in" style="animation-delay: 0.4s">
+    <div class="mt-12 text-center" style="opacity: 1 !important;">
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a
-          href="https://t.me/topads_support"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="group relative inline-flex items-center px-10 py-5 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300"
-        >
-          <span class="relative z-10">🚀 Contact Us Now</span>
-          <svg class="w-6 h-6 ml-3 relative z-10 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </a>
+        <button class="elegant-button-cta inline-flex items-center">
+          <span class="relative z-10 drop-shadow-lg">
+            {currentLang === 'es' ? '🚀 Contáctanos Ahora' : 
+             currentLang === 'en' ? '🚀 Contact Us Now' : 
+             '🚀 Свяжитесь с Нами Сейчас'}
+          </span>
+        </button>
         
         <div class="flex items-center space-x-2 text-slate-500">
           <div class="flex -space-x-2">
@@ -111,7 +141,11 @@
             <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-emerald-500 border-2 border-white"></div>
             <div class="w-8 h-8 rounded-full bg-gradient-to-r from-pink-500 to-cyan-500 border-2 border-white"></div>
           </div>
-          <span class="text-sm">+500 clientes activos</span>
+          <span class="text-sm">
+            {currentLang === 'es' ? '+500 clientes activos' : 
+             currentLang === 'en' ? '+500 active clients' : 
+             '+500 активных клиентов'}
+          </span>
         </div>
       </div>
     </div>
@@ -119,6 +153,18 @@
 </section>
 
 <style>
+  /* Forzar visibilidad del CTA */
+  #contact {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+  
+  #contact * {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
   @keyframes fade-in {
     from {
       opacity: 0;

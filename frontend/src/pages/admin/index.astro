@@ -1,146 +1,49 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
+import AnalyticsDashboard from '../../components/admin/AnalyticsDashboard';
+import ClientManager from '../../components/admin/ClientManager';
+import NotificationCenter from '../../components/admin/NotificationCenter';
 ---
 
-<AdminLayout title="Dashboard">
+<AdminLayout>
   <div class="space-y-6">
-    <!-- Header -->
-    <div class="bg-white rounded-lg shadow-sm p-6">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Panel de Administración</h1>
-      <p class="text-gray-600">Gestiona todo el contenido de tu landing page desde aquí</p>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="flex items-center">
-          <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-            <i class="fas fa-home text-xl"></i>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Sección Hero</p>
-            <p class="text-2xl font-bold text-gray-900">Activa</p>
-          </div>
-        </div>
+    <!-- Header con Notificaciones -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+        <p class="text-tech-300">Bienvenido al panel de administración</p>
       </div>
-
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="flex items-center">
-          <div class="p-3 rounded-full bg-green-100 text-green-600">
-            <i class="fas fa-cogs text-xl"></i>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Servicios</p>
-            <p class="text-2xl font-bold text-gray-900">3</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="flex items-center">
-          <div class="p-3 rounded-full bg-purple-100 text-purple-600">
-            <i class="fas fa-user-shield text-xl"></i>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Cuentas Premium</p>
-            <p class="text-2xl font-bold text-gray-900">3</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-lg shadow-sm p-6">
-        <div class="flex items-center">
-          <div class="p-3 rounded-full bg-orange-100 text-orange-600">
-            <i class="fas fa-question-circle text-xl"></i>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Preguntas FAQ</p>
-            <p class="text-2xl font-bold text-gray-900">4</p>
-          </div>
-        </div>
+      <div class="flex items-center space-x-4">
+        <NotificationCenter client:load />
       </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-sm p-6">
-      <h2 class="text-xl font-bold text-gray-900 mb-4">Acciones Rápidas</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <a href="/admin/hero" class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors">
-          <i class="fas fa-home text-blue-600 mr-3"></i>
-          <div>
-            <p class="font-medium text-gray-900">Editar Hero</p>
-            <p class="text-sm text-gray-600">Título, subtítulo y botones</p>
-          </div>
-        </a>
+    <!-- Analytics Dashboard -->
+    <div id="analytics-root"></div>
 
-        <a href="/admin/services" class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors">
-          <i class="fas fa-cogs text-blue-600 mr-3"></i>
-          <div>
-            <p class="font-medium text-gray-900">Editar Servicios</p>
-            <p class="text-sm text-gray-600">Lista de servicios ofrecidos</p>
-          </div>
-        </a>
-
-        <a href="/admin/accounts" class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors">
-          <i class="fas fa-user-shield text-blue-600 mr-3"></i>
-          <div>
-            <p class="font-medium text-gray-900">Editar Cuentas</p>
-            <p class="text-sm text-gray-600">Paquetes premium disponibles</p>
-          </div>
-        </a>
-
-        <a href="/admin/solutions" class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors">
-          <i class="fas fa-building text-blue-600 mr-3"></i>
-          <div>
-            <p class="font-medium text-gray-900">Editar Soluciones</p>
-            <p class="text-sm text-gray-600">Soluciones enterprise</p>
-          </div>
-        </a>
-
-        <a href="/admin/faq" class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors">
-          <i class="fas fa-question-circle text-blue-600 mr-3"></i>
-          <div>
-            <p class="font-medium text-gray-900">Editar FAQ</p>
-            <p class="text-sm text-gray-600">Preguntas frecuentes</p>
-          </div>
-        </a>
-
-        <a href="/admin/footer" class="flex items-center p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors">
-          <i class="fas fa-info-circle text-blue-600 mr-3"></i>
-          <div>
-            <p class="font-medium text-gray-900">Editar Footer</p>
-            <p class="text-sm text-gray-600">Contacto y enlaces</p>
-          </div>
-        </a>
-      </div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="bg-white rounded-lg shadow-sm p-6">
-      <h2 class="text-xl font-bold text-gray-900 mb-4">Actividad Reciente</h2>
-      <div class="space-y-3">
-        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-          <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-900">Contenido actualizado</p>
-            <p class="text-xs text-gray-600">Sección Hero - hace 2 horas</p>
-          </div>
-        </div>
-        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-          <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-900">Nuevo contenido creado</p>
-            <p class="text-xs text-gray-600">Sección FAQ - hace 1 día</p>
-          </div>
-        </div>
-        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-          <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-900">Configuración modificada</p>
-            <p class="text-xs text-gray-600">Footer - hace 3 días</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- Gestión de Clientes -->
+    <div id="clients-root"></div>
   </div>
-</AdminLayout> 
+</AdminLayout>
+
+<script>
+  import React from 'react';
+  import { createRoot } from 'react-dom/client';
+
+  // Esperar a que el DOM esté completamente cargado
+  document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar Analytics Dashboard
+    const analyticsContainer = document.getElementById('analytics-root');
+    if (analyticsContainer) {
+      const analyticsRoot = createRoot(analyticsContainer);
+      analyticsRoot.render(React.createElement(AnalyticsDashboard));
+    }
+
+    // Inicializar Client Manager
+    const clientsContainer = document.getElementById('clients-root');
+    if (clientsContainer) {
+      const clientsRoot = createRoot(clientsContainer);
+      clientsRoot.render(React.createElement(ClientManager));
+    }
+  });
+</script> 

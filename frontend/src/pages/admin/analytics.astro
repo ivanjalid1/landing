@@ -1,8 +1,24 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import AnalyticsDashboard from '../../components/admin/AnalyticsDashboard.jsx';
+import AnalyticsDashboard from '../../components/admin/AnalyticsDashboard';
 ---
 
-<AdminLayout title="Analytics & Estadísticas">
-  <AnalyticsDashboard client:load />
-</AdminLayout> 
+<AdminLayout>
+  <AnalyticsDashboard client:only="react" />
+</AdminLayout>
+
+<style>
+  /* Estilos para el contenedor del gráfico */
+  :global(#conversion-graph) {
+    width: 100% !important;
+    height: 300px !important;
+    background: transparent;
+  }
+
+  :global(.graph-container) {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    margin-top: 1rem;
+  }
+</style> 

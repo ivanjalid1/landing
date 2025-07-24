@@ -1,117 +1,447 @@
 ---
+// Importaciones
 import { Image } from 'astro:assets';
-const fbImg = '/src/img/fb.jpg';
-const igImg = '/src/img/ig.jpg';
-const deliverySvg = '/src/img/advantages-delivery.svg';
-const supportSvg = '/src/img/advantages-support.svg';
-const secureSvg = '/src/img/advantages-secure.svg';
-
-// Cargar contenido dinámicamente desde el backend
-let heroContent = {
-  title: "Your #1 agency for advertising assets & solutions!",
-  subtitle: "We're proud to support your business and help you overcome obstacles from Facebook bans.",
-  buttonText: "🚀 Contact Direct",
-  buttonLink: "#contact",
-  paymentInfo: "Contact us to pay using VISA, Wise, Payoneer, Bank Transfer, IBAN",
-  supportText: "Support"
-};
-
-try {
-  const response = await fetch('http://localhost:5000/api/content/hero');
-  if (response.ok) {
-    const data = await response.json();
-    if (data.success && data.data?.data) {
-      heroContent = data.data.data;
-    }
-  }
-} catch (error) {
-  console.log('Error cargando contenido del hero:', error);
-}
 ---
 
-<section class="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 overflow-hidden">
-  <!-- Curva azul decorativa -->
-  <div class="absolute top-0 left-0 w-full h-1/2 z-0">
-    <svg viewBox="0 0 1440 320" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill="#f0f9ff" fill-opacity="0.8" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,133.3C840,107,960,85,1080,101.3C1200,117,1320,171,1380,197.3L1440,224L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
-    </svg>
-  </div>
+<!-- SVG Icons -->
+<svg class="hidden">
+  <!-- Facebook Ads Icon -->
+  <symbol id="icon-fb-ads" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/>
+  </symbol>
 
-  <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-8 flex flex-col lg:flex-row items-center justify-between gap-8 z-10">
-    <!-- Imágenes 3D Facebook e Instagram -->
-    <div class="w-full max-w-md flex-shrink-0 mb-12 lg:mb-0 flex flex-col items-center">
-      <div class="flex gap-4 items-center mb-2">
-        <img src={fbImg} alt="Facebook 3D" class="w-32 h-32 rounded-2xl shadow-lg object-cover animate-float" loading="lazy" />
-        <img src={igImg} alt="Instagram 3D" class="w-32 h-32 rounded-2xl shadow-lg object-cover animate-float" loading="lazy" />
-      </div>
-      <div class="flex gap-2 mt-8">
-        <span class="inline-flex items-center px-3 py-1 rounded-full bg-white shadow text-xs font-semibold text-slate-700 border border-slate-200">
-          <img src={deliverySvg} alt="Delivery" class="w-4 h-4 mr-2" />
-          Instant delivery
-        </span>
-        <span class="inline-flex items-center px-3 py-1 rounded-full bg-white shadow text-xs font-semibold text-slate-700 border border-slate-200">
-          <img src={supportSvg} alt="Support" class="w-4 h-4 mr-2" />
-          Best Support
-        </span>
-        <span class="inline-flex items-center px-3 py-1 rounded-full bg-white shadow text-xs font-semibold text-slate-700 border border-slate-200">
-          <img src={secureSvg} alt="Secure" class="w-4 h-4 mr-2" />
-          100% Secure
-        </span>
-      </div>
+  <!-- Analytics Icon -->
+  <symbol id="icon-analytics" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M3 3v18h18v-2H5V3H3zm4 14h2v-4H7v4zm4 0h2V7h-2v10zm4 0h2v-6h-2v6zm4 0h2v-8h-2v8z"/>
+  </symbol>
+
+  <!-- Target Icon -->
+  <symbol id="icon-target" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+  </symbol>
+
+  <!-- Conversion Icon -->
+  <symbol id="icon-conversion" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6h-6z"/>
+  </symbol>
+
+  <!-- Campaign Icon -->
+  <symbol id="icon-campaign" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h8v2H6zm10 0h2v2h-2zm-6-4h8v2h-8z"/>
+  </symbol>
+
+  <!-- Performance Icon -->
+  <symbol id="icon-performance" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+  </symbol>
+
+  <!-- ROI Icon -->
+  <symbol id="icon-roi" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+  </symbol>
+
+  <!-- Business Icon -->
+  <symbol id="icon-business" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+  </symbol>
+
+  <!-- Support Icon -->
+  <symbol id="icon-support" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M12 1C5.9 1 1 5.9 1 12s4.9 11 11 11 11-4.9 11-11S18.1 1 12 1zm0 20c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9zm1-15h-2v2h2V6zm0 4h-2v8h2v-8z"/>
+  </symbol>
+</svg>
+
+<!-- Nuevos SVG Icons para el Hero -->
+<symbol id="icon-speed" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-12l-4.5 6.5h-2l4.5-6.5h2zM12 7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+</symbol>
+
+<symbol id="icon-clients" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+  <path fill="currentColor" d="M16.5 6c1.38 0 2.5 1.12 2.5 2.5S17.88 11 16.5 11 14 9.88 14 8.5 15.12 6 16.5 6zm0 9c1.66 0 4.5.84 4.5 2.5V19h-9v-1.5c0-1.66 2.84-2.5 4.5-2.5z" opacity="0.5"/>
+  <path fill="currentColor" d="M7.5 6C8.88 6 10 7.12 10 8.5S8.88 11 7.5 11 5 9.88 5 8.5 6.12 6 7.5 6zm0 9c1.66 0 4.5.84 4.5 2.5V19h-9v-1.5c0-1.66 2.84-2.5 4.5-2.5z" opacity="0.5"/>
+</symbol>
+
+<symbol id="icon-support-tech" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 1C5.9 1 1 5.9 1 12s4.9 11 11 11 11-4.9 11-11S18.1 1 12 1zm0 20c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9z"/>
+  <path fill="currentColor" d="M12 6c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 10c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/>
+  <path fill="currentColor" d="M12 8c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+</symbol>
+
+<symbol id="icon-secure" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l6 2.67v5.15c0 4.54-3.2 8.79-6 9.91-2.8-1.12-6-5.37-6-9.91V5.85l6-2.67z"/>
+  <path fill="currentColor" d="M11 7h2v6h-2zm0 8h2v2h-2z" opacity="0.6"/>
+</symbol>
+
+<symbol id="icon-instant" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+  <path fill="currentColor" d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+  <path fill="currentColor" d="M13 7l4 4-4 4" opacity="0.6"/>
+</symbol>
+
+<symbol id="icon-quality" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+  <path fill="currentColor" d="M12 4.5l2 4.05 4.5.65-3.25 3.15.75 4.4L12 14.8V4.5z" opacity="0.3"/>
+</symbol>
+
+<!-- Header Sticky -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-tech-700/30">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between h-20">
+      <a href="/" class="text-2xl font-bold text-white flex items-center gap-2">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white">
+          <svg class="w-6 h-6"><use href="#icon-fb-ads" /></svg>
+        </div>
+        Top Ads
+      </a>
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#accounts" class="text-tech-300 hover:text-white transition-colors flex items-center gap-2">
+          <i class="fas fa-user-check"></i>Cuentas
+        </a>
+        <a href="#services" class="text-tech-300 hover:text-white transition-colors flex items-center gap-2">
+          <i class="fas fa-cog"></i>Servicios
+        </a>
+        <a href="#faq" class="text-tech-300 hover:text-white transition-colors flex items-center gap-2">
+          <i class="fas fa-question-circle"></i>FAQ
+        </a>
+        <a href="#contact" class="text-tech-300 hover:text-white transition-colors flex items-center gap-2">
+          <i class="fas fa-envelope"></i>Contacto
+        </a>
+      </nav>
+      <a href="#contact" class="btn-primary-sm">
+        <i class="fas fa-rocket"></i>
+        Conectar Ahora
+      </a>
     </div>
-    <!-- Contenido -->
-    <div class="flex-1 text-center lg:text-left">
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight text-slate-800">
-        {heroContent.title}
-      </h1>
-      <p class="text-base sm:text-lg text-slate-600 max-w-lg mb-8 mx-auto lg:mx-0">
-        {heroContent.subtitle}
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
-        {heroContent.buttonLink ? (
-          <a href={heroContent.buttonLink} class="group relative inline-flex items-center px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <span class="relative z-10">{heroContent.buttonText}</span>
-            <svg class="w-6 h-6 ml-2 relative z-10 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+  </div>
+</header>
+
+<section class="relative min-h-screen flex items-center justify-center bg-black pt-20 overflow-hidden">
+  <!-- Fondo con efectos techie -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(24,24,27,0.8),rgba(0,0,0,1))]"></div>
+  
+  <!-- Grid de fondo -->
+  <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDBNIDAgMjAgTCA0MCAyMCBNIDIwIDAgTCAyMCA0MCBNIDAgMzAgTCA0MCAzMCBNIDMwIDAgTCAzMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20"></div>
+
+  <!-- Glow effects -->
+  <div class="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary-500/20 rounded-full filter blur-[128px] animate-pulse"></div>
+  <div class="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-primary-600/20 rounded-full filter blur-[128px] animate-pulse"></div>
+
+  <div class="container mx-auto px-4 py-16 relative z-10">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <!-- Contenido principal -->
+      <div class="space-y-8">
+        <div class="space-y-6">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            Te hacemos ahorrar <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600 relative">
+              tiempo y esfuerzo
+              <div class="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-primary-400/0 via-primary-500/50 to-primary-600/0"></div>
+            </span>
+          </h1>
+          <p class="text-xl text-tech-300 max-w-2xl">
+            Obtén cuentas de Facebook verificadas y listas para usar. Optimiza tu presencia publicitaria sin complicaciones.
+          </p>
+        </div>
+
+        <!-- Métricas del Hero -->
+        <div class="grid grid-cols-3 gap-6">
+          <div class="stat-item group">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-all duration-300">
+                <svg class="w-7 h-7 text-primary-500"><use href="#icon-speed" /></svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600" data-value="100">100%</div>
+                <div class="text-sm text-tech-300">Tasa de Entrega</div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-item group">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-all duration-300">
+                <svg class="w-7 h-7 text-primary-500"><use href="#icon-clients" /></svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600" data-value="1000">1000+</div>
+                <div class="text-sm text-tech-300">Clientes Activos</div>
+              </div>
+            </div>
+          </div>
+          <div class="stat-item group">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-all duration-300">
+                <svg class="w-7 h-7 text-primary-500"><use href="#icon-support-tech" /></svg>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-600">24/7</div>
+                <div class="text-sm text-tech-300">Soporte VIP</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#accounts" class="btn-primary group">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-primary-600"></div>
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDUgTCAyMCA1IE0gNSAwIEwgNSAyMCBNIDAgMTAgTCAyMCAxMCBNIDEwIDAgTCAxMCAyMCBNIDAgMTUgTCAyMCAxNSBNIDE1IDAgTCAxNSAyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20"></div>
+            <span class="relative flex items-center gap-2">
+              <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-300"><use href="#icon-fb-ads" /></svg>
+              Ver Cuentas Disponibles
+            </span>
           </a>
-        ) : (
-          <button class="group relative inline-flex items-center px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-            <span class="relative z-10">{heroContent.buttonText}</span>
-            <svg class="w-6 h-6 ml-2 relative z-10 transform group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </button>
-        )}
+          <a href="#contact" class="btn-secondary group">
+            <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-300"><use href="#icon-support-tech" /></svg>
+            <span>Consultar Disponibilidad</span>
+          </a>
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="flex items-center gap-6 pt-4">
+          <div class="trust-badge group">
+            <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-all duration-300">
+              <svg class="w-7 h-7 text-primary-500 group-hover:scale-110 transition-transform duration-300">
+                <use href="#icon-secure" />
+              </svg>
+            </div>
+            <span>Pago Seguro</span>
+          </div>
+          <div class="trust-badge group">
+            <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-all duration-300">
+              <svg class="w-7 h-7 text-primary-500 group-hover:scale-110 transition-transform duration-300">
+                <use href="#icon-instant" />
+              </svg>
+            </div>
+            <span>Entrega Inmediata</span>
+          </div>
+          <div class="trust-badge group">
+            <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center group-hover:bg-primary-500/20 transition-all duration-300">
+              <svg class="w-7 h-7 text-primary-500 group-hover:scale-110 transition-transform duration-300">
+                <use href="#icon-quality" />
+              </svg>
+            </div>
+            <span>Garantía de Calidad</span>
+          </div>
+        </div>
       </div>
-      <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
-        {heroContent.paymentInfo && (
-          <span class="inline-flex items-center px-4 py-2 rounded-full bg-white text-slate-700 font-semibold text-sm shadow border border-slate-200">{heroContent.paymentInfo}</span>
-        )}
-        {heroContent.supportText && (
-          <span class="inline-flex items-center px-4 py-2 rounded-full bg-white text-slate-700 font-semibold text-sm shadow border border-slate-200">{heroContent.supportText}</span>
-        )}
+
+      <!-- Dashboard Preview -->
+      <div class="relative max-w-lg mx-auto lg:mx-0">
+        <!-- Glow effect behind dashboard -->
+        <div class="absolute inset-0 bg-primary-500/5 rounded-2xl filter blur-3xl"></div>
+        
+        <div class="relative bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
+          <div class="absolute inset-0 bg-gradient-to-br from-tech-800/50 to-transparent rounded-2xl"></div>
+          <div class="relative space-y-6">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-[#1877F2]/20 flex items-center justify-center">
+                  <svg class="w-8 h-8 text-[#1877F2]"><use href="#icon-fb-ads" /></svg>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#1877F2]"><use href="#icon-business" /></svg>
+                    Facebook Business
+                  </h3>
+                  <p class="text-sm text-tech-300 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-[#1877F2]"><use href="#icon-analytics" /></svg>
+                    Panel de Control
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-green-400 text-sm flex items-center gap-2">
+                  <i class="fas fa-signal"></i>En línea
+                </span>
+              </div>
+            </div>
+
+            <!-- Main Stats -->
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-gradient-to-br from-[#1877F2]/20 to-tech-800/30 rounded-xl p-4 border border-tech-700/50 hover:border-[#1877F2]/30 transition-all duration-300">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="w-10 h-10 rounded-lg bg-[#1877F2]/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#1877F2]"><use href="#icon-target" /></svg>
+                  </div>
+                  <div class="text-sm text-tech-300">Alcance</div>
+                </div>
+                <div class="text-2xl font-bold text-white">1.2M+</div>
+                <div class="text-xs text-[#1877F2] mt-1 flex items-center gap-1">
+                  <svg class="w-3 h-3"><use href="#icon-conversion" /></svg>
+                  25% vs mes anterior
+                </div>
+              </div>
+              <div class="bg-gradient-to-br from-[#1877F2]/20 to-tech-800/30 rounded-xl p-4 border border-tech-700/50 hover:border-[#1877F2]/30 transition-all duration-300">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="w-10 h-10 rounded-lg bg-[#1877F2]/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-[#1877F2]"><use href="#icon-conversion" /></svg>
+                  </div>
+                  <div class="text-sm text-tech-300">Conversión</div>
+                </div>
+                <div class="text-2xl font-bold text-white">8.5%</div>
+                <div class="text-xs text-[#1877F2] mt-1 flex items-center gap-1">
+                  <svg class="w-3 h-3"><use href="#icon-conversion" /></svg>
+                  12% vs mes anterior
+                </div>
+              </div>
+            </div>
+
+            <!-- Campaign Performance -->
+            <div class="space-y-3">
+              <div class="text-sm font-medium text-tech-300 mb-2 flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#1877F2]"><use href="#icon-performance" /></svg>
+                Rendimiento de Campañas
+              </div>
+              <div class="space-y-2">
+                <div class="bg-tech-900/50 rounded-lg p-3 border border-tech-700/30">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-4 h-4 text-[#1877F2]"><use href="#icon-campaign" /></svg>
+                      <span class="text-sm text-white">E-commerce</span>
+                    </div>
+                    <span class="text-sm text-[#1877F2] flex items-center gap-1">
+                      <svg class="w-3 h-3"><use href="#icon-roi" /></svg>
+                      12.4 CPA
+                    </span>
+                  </div>
+                  <div class="w-full bg-tech-800/50 rounded-full h-2">
+                    <div class="bg-[#1877F2] h-2 rounded-full" style="width: 85%"></div>
+                  </div>
+                </div>
+                <div class="bg-tech-900/50 rounded-lg p-3 border border-tech-700/30">
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-4 h-4 text-[#1877F2]"><use href="#icon-campaign" /></svg>
+                      <span class="text-sm text-white">Retail</span>
+                    </div>
+                    <span class="text-sm text-[#1877F2] flex items-center gap-1">
+                      <svg class="w-3 h-3"><use href="#icon-roi" /></svg>
+                      8.7 CPA
+                    </span>
+                  </div>
+                  <div class="w-full bg-tech-800/50 rounded-full h-2">
+                    <div class="bg-[#1877F2] h-2 rounded-full" style="width: 92%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="flex items-center gap-3">
+              <button class="flex-1 bg-[#1877F2]/20 hover:bg-[#1877F2]/30 text-[#1877F2] rounded-xl py-2 px-4 text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-2">
+                <svg class="w-4 h-4"><use href="#icon-campaign" /></svg>
+                Nueva Campaña
+              </button>
+              <button class="flex-1 bg-[#1877F2]/20 hover:bg-[#1877F2]/30 text-[#1877F2] rounded-xl py-2 px-4 text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-2">
+                <svg class="w-4 h-4"><use href="#icon-analytics" /></svg>
+                Ver Análisis
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Elements -->
+        <div class="absolute -top-4 right-4 bg-tech-800/30 backdrop-blur-sm rounded-xl p-4 border border-tech-700/30 hover:border-[#1877F2]/30 transition-all duration-300 z-10">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-[#1877F2]/20 flex items-center justify-center">
+              <svg class="w-6 h-6 text-[#1877F2]"><use href="#icon-performance" /></svg>
+            </div>
+            <div>
+              <div class="text-sm font-medium text-white flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#1877F2]"><use href="#icon-roi" /></svg>
+                Campaña Optimizada
+              </div>
+              <div class="text-xs text-tech-300 flex items-center gap-1">
+                <svg class="w-3 h-3 text-[#1877F2]"><use href="#icon-conversion" /></svg>
+                ROI mejorado en 35%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute -bottom-4 right-4 bg-tech-800/30 backdrop-blur-sm rounded-xl p-4 border border-tech-700/30 hover:border-[#1877F2]/30 transition-all duration-300 z-10">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-[#1877F2]/20 flex items-center justify-center">
+              <svg class="w-6 h-6 text-[#1877F2]"><use href="#icon-analytics" /></svg>
+            </div>
+            <div>
+              <div class="text-sm font-medium text-white flex items-center gap-2">
+                <svg class="w-4 h-4 text-[#1877F2]"><use href="#icon-performance" /></svg>
+                Análisis Semanal
+              </div>
+              <div class="text-xs text-[#1877F2] flex items-center gap-1">
+                <svg class="w-3 h-3"><use href="#icon-conversion" /></svg>
+                +28% conversiones
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-/* Animación personalizada para movimiento alternado */
-<style is:global>
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-@keyframes float-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(12px); }
-}
-.animate-float {
-  animation: float 3.5s ease-in-out infinite;
-}
-.animate-float-slow {
-  animation: float-slow 4.2s ease-in-out infinite;
-}
-</style> 
+<style>
+  .btn-primary-sm {
+    @apply inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-xl text-sm font-medium transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 px-8 py-4 text-white rounded-xl font-semibold text-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-primary-500/20;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center gap-3 px-8 py-4 bg-tech-800/50 text-white rounded-xl font-semibold text-lg border border-tech-700/30 hover:bg-tech-700/50 hover:border-tech-600/50 transition-all duration-300;
+  }
+
+  .stat-item {
+    @apply bg-tech-800/30 backdrop-blur-sm rounded-xl p-4 border border-tech-700/30 hover:border-tech-600/50 transition-all duration-300;
+  }
+
+  .trust-badge {
+    @apply flex items-center gap-3 px-4 py-2 bg-tech-800/30 backdrop-blur-sm rounded-xl border border-tech-700/30 text-white hover:border-tech-600/50 transition-all duration-300;
+  }
+
+  .feature-item {
+    @apply flex items-center gap-3 px-4 py-2.5 bg-tech-900/30 rounded-lg border border-tech-700/50 text-white text-sm;
+  }
+
+  svg {
+    fill: currentColor;
+  }
+</style>
+
+<script>
+  // Animación de números
+  function animateValue(element, start, end, duration = 2000) {
+    if (!element) return;
+    
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const current = progress === 1 ? end : (start + (end - start) * easeOutQuart);
+      
+      element.textContent = current.toFixed(0) + (element.dataset.value.includes('%') ? '%' : '+');
+      
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    
+    window.requestAnimationFrame(step);
+  }
+
+  // Inicializar cuando el DOM esté listo
+  document.addEventListener('DOMContentLoaded', () => {
+    // Animar números
+    document.querySelectorAll('.stat-item div[data-value]').forEach(el => {
+      const value = parseFloat(el.dataset.value);
+      animateValue(el, 0, value);
+    });
+  });
+</script> 

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { authenticatedFetch, isAuthenticated } from '../../utils/auth.js';
+import { safeRedirect, showToast } from '../../utils/browser.js';
 
 const ContentEditor = ({ section, fields, title, description }) => {
   const [content, setContent] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [originalContent, setOriginalContent] = useState({});
 
   // Cargar contenido inicial
   useEffect(() => {
@@ -14,31 +17,55 @@ const ContentEditor = ({ section, fields, title, description }) => {
   const loadContent = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/content/${section}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      setError('');
+      
+      if (!isAuthenticated()) {
+        setError('No hay token de autenticación');
+        setTimeout(() => {
+          safeRedirect('/login');
+        }, 2000);
+        return;
+      }
+
+      const response = await authenticatedFetch(`http://localhost:5000/api/content/${section}`);
 
       if (response.ok) {
         const data = await response.json();
-        setContent(data.data?.data || {});
+        console.log('Contenido cargado:', data);
+        
+        if (data.success && data.data && data.data.data) {
+          const loadedContent = data.data.data;
+          setContent(loadedContent);
+          setOriginalContent(loadedContent);
+          console.log('✅ Contenido cargado correctamente desde la BBDD');
+        } else {
+          // Si no existe contenido, usar valores por defecto
+          const defaultContent = {};
+          fields.forEach(field => {
+            if (field.type === 'array') {
+              defaultContent[field.name] = field.defaultValue || [];
+            } else {
+              defaultContent[field.name] = field.defaultValue || '';
+            }
+          });
+          setContent(defaultContent);
+          setOriginalContent(defaultContent);
+          console.log('⚠️ No hay contenido en BBDD, usando valores por defecto');
+        }
       } else {
-        // Si no existe contenido, usar valores por defecto
-        const defaultContent = {};
-        fields.forEach(field => {
-          if (field.type === 'array') {
-            defaultContent[field.name] = field.defaultValue || [];
-          } else {
-            defaultContent[field.name] = field.defaultValue || '';
-          }
-        });
-        setContent(defaultContent);
+        const errorData = await response.json();
+        setError(errorData.message || 'Error al cargar el contenido');
       }
     } catch (error) {
       console.error('Error cargando contenido:', error);
-      setError('Error al cargar el contenido');
+      if (error.message === 'Sesión expirada') {
+        setError('Sesión expirada. Redirigiendo al login...');
+        setTimeout(() => {
+          safeRedirect('/login');
+        }, 2000);
+      } else {
+        setError('Error de conexión al cargar el contenido');
+      }
     } finally {
       setLoading(false);
     }
@@ -49,26 +76,41 @@ const ContentEditor = ({ section, fields, title, description }) => {
       setSaving(true);
       setError('');
 
-      const response = await fetch(`http://localhost:5000/api/content/${section}`, {
+      if (!isAuthenticated()) {
+        setError('No hay token de autenticación');
+        setTimeout(() => {
+          safeRedirect('/login');
+        }, 2000);
+        return;
+      }
+
+      const response = await authenticatedFetch(`http://localhost:5000/api/content/${section}`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ data: content })
       });
 
       if (response.ok) {
-        window.showToast('Contenido guardado exitosamente', 'success');
+        const result = await response.json();
+        setOriginalContent(content);
+        showToast('Contenido guardado exitosamente', 'success');
+        console.log('✅ Contenido guardado:', result);
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Error al guardar');
-        window.showToast('Error al guardar el contenido', 'error');
+        showToast('Error al guardar el contenido', 'error');
       }
     } catch (error) {
       console.error('Error guardando contenido:', error);
-      setError('Error de conexión');
-      window.showToast('Error de conexión', 'error');
+      if (error.message === 'Sesión expirada') {
+        setError('Sesión expirada. Redirigiendo al login...');
+        showToast('Sesión expirada', 'error');
+        setTimeout(() => {
+          safeRedirect('/login');
+        }, 2000);
+      } else {
+        setError('Error de conexión al guardar');
+        showToast('Error de conexión', 'error');
+      }
     } finally {
       setSaving(false);
     }
@@ -104,10 +146,17 @@ const ContentEditor = ({ section, fields, title, description }) => {
     }));
   };
 
+  const hasChanges = () => {
+    return JSON.stringify(content) !== JSON.stringify(originalContent);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando contenido...</p>
+        </div>
       </div>
     );
   }
@@ -116,7 +165,7 @@ const ContentEditor = ({ section, fields, title, description }) => {
     <div className="space-y-6">
       {/* Header */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">{title}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
         <p className="text-gray-600">{description}</p>
       </div>
 
@@ -125,8 +174,8 @@ const ContentEditor = ({ section, fields, title, description }) => {
         <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
           <div className="space-y-6">
             {fields.map((field) => (
-              <div key={field.name} className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
+              <div key={field.name} className="bg-white rounded-lg shadow-sm p-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   {field.label}
                   {field.required && <span className="text-red-500 ml-1">*</span>}
                 </label>
@@ -136,9 +185,9 @@ const ContentEditor = ({ section, fields, title, description }) => {
                     type="text"
                     value={content[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder={field.placeholder}
                     required={field.required}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 )}
 
@@ -146,10 +195,10 @@ const ContentEditor = ({ section, fields, title, description }) => {
                   <textarea
                     value={content[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                    rows={field.rows || 4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder={field.placeholder}
                     required={field.required}
+                    rows={field.rows || 3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 )}
 
@@ -158,74 +207,48 @@ const ContentEditor = ({ section, fields, title, description }) => {
                     type="url"
                     value={content[field.name] || ''}
                     onChange={(e) => handleFieldChange(field.name, e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder={field.placeholder}
                     required={field.required}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 )}
 
                 {field.type === 'array' && (
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     {(content[field.name] || []).map((item, index) => (
-                      <div key={index} className="border border-gray-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <h4 className="font-medium text-gray-900">
-                            {field.itemLabel} #{index + 1}
-                          </h4>
-                          <button
-                            type="button"
-                            onClick={() => removeArrayItem(field.name, index)}
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {field.fields.map((subField) => (
-                            <div key={subField.name}>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                {subField.label}
-                              </label>
-                              {subField.type === 'text' && (
-                                <input
-                                  type="text"
-                                  value={item[subField.name] || ''}
-                                  onChange={(e) => handleArrayFieldChange(field.name, index, { [subField.name]: e.target.value })}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                  placeholder={subField.placeholder}
-                                />
-                              )}
-                              {subField.type === 'textarea' && (
-                                <textarea
-                                  value={item[subField.name] || ''}
-                                  onChange={(e) => handleArrayFieldChange(field.name, index, { [subField.name]: e.target.value })}
-                                  rows={3}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                  placeholder={subField.placeholder}
-                                />
-                              )}
-                              {subField.type === 'checkbox' && (
-                                <input
-                                  type="checkbox"
-                                  checked={item[subField.name] || false}
-                                  onChange={(e) => handleArrayFieldChange(field.name, index, { [subField.name]: e.target.checked })}
-                                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                />
-                              )}
-                            </div>
-                          ))}
-                        </div>
+                      <div key={index} className="flex items-center space-x-2">
+                        <input
+                          type="text"
+                          value={item}
+                          onChange={(e) => {
+                            const newArray = [...content[field.name]];
+                            newArray[index] = e.target.value;
+                            setContent({ ...content, [field.name]: newArray });
+                          }}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newArray = content[field.name].filter((_, i) => i !== index);
+                            setContent({ ...content, [field.name]: newArray });
+                          }}
+                          className="p-2 text-red-600 hover:text-red-700"
+                        >
+                          <i className="fas fa-times"></i>
+                        </button>
                       </div>
                     ))}
-                    
                     <button
                       type="button"
-                      onClick={() => addArrayItem(field.name, field.template)}
-                      className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
+                      onClick={() => {
+                        const newArray = [...(content[field.name] || []), ''];
+                        setContent({ ...content, [field.name]: newArray });
+                      }}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
-                      <i className="fas fa-plus"></i>
-                      <span>Agregar {field.itemLabel}</span>
+                      <i className="fas fa-plus mr-2"></i>
+                      Agregar
                     </button>
                   </div>
                 )}
@@ -245,25 +268,26 @@ const ContentEditor = ({ section, fields, title, description }) => {
             <button
               type="button"
               onClick={loadContent}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Cancelar
+              Descartar Cambios
             </button>
+            
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               {saving ? (
-                <span className="flex items-center space-x-2">
-                  <i className="fas fa-spinner fa-spin"></i>
-                  <span>Guardando...</span>
-                </span>
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Guardando...
+                </>
               ) : (
-                <span className="flex items-center space-x-2">
-                  <i className="fas fa-save"></i>
-                  <span>Guardar Cambios</span>
-                </span>
+                <>
+                  <i className="fas fa-save mr-2"></i>
+                  Guardar Cambios
+                </>
               )}
             </button>
           </div>

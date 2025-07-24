@@ -1,95 +1,108 @@
-const { User } = require('../models');
-const { generateToken } = require('../middleware/auth');
-const { registerSchema, loginSchema } = require('../validators/authValidator');
+const jwt = require('jsonwebtoken');
 
-exports.register = async (req, res, next) => {
-  try {
-    // Validar datos de entrada
-    const validatedData = await registerSchema.validate(req.body);
+// Configuración
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_EXPIRES_IN = '24h';
 
-    // Verificar si el email ya existe
-    const existingUser = await User.findOne({
-      where: { email: validatedData.email }
-    });
-
-    if (existingUser) {
-      return res.status(400).json({
-        error: 'El email ya está registrado'
-      });
-    }
-
-    // Crear usuario
-    const user = await User.create({
-      name: validatedData.name,
-      email: validatedData.email,
-      password_hash: validatedData.password,
-      role: validatedData.role || 'user'
-    });
-
-    // Generar token
-    const token = generateToken(user);
-
-    // Responder sin incluir password_hash
-    const { password_hash, ...userData } = user.toJSON();
-
-    res.status(201).json({
-      message: 'Usuario registrado exitosamente',
-      user: userData,
-      token
-    });
-  } catch (error) {
-    next(error);
-  }
+// Usuario de prueba (en producción usar base de datos)
+const ADMIN_USER = {
+  id: 1,
+  email: 'admin@topads.agency',
+  password: 'admin123',
+  role: 'admin'
 };
 
-exports.login = async (req, res, next) => {
-  try {
-    // Validar datos de entrada
-    const validatedData = await loginSchema.validate(req.body);
+const authController = {
+  // Login
+  login: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      // Validación básica
+      if (!email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: 'Email y contraseña son requeridos'
+        });
+      }
 
-    // Buscar usuario
-    const user = await User.findOne({
-      where: { email: validatedData.email }
-    });
+      // Verificar credenciales
+      if (email === ADMIN_USER.email && password === ADMIN_USER.password) {
+        // Generar token
+        const token = jwt.sign(
+          { userId: ADMIN_USER.id, email: ADMIN_USER.email, role: ADMIN_USER.role },
+          JWT_SECRET,
+          { expiresIn: JWT_EXPIRES_IN }
+        );
 
-    if (!user || !(await user.validatePassword(validatedData.password))) {
-      return res.status(401).json({
-        error: 'Credenciales inválidas'
+        // Enviar respuesta
+        res.cookie('token', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 24 * 60 * 60 * 1000 // 24 horas
+        });
+
+        res.json({
+          success: true,
+          message: 'Login exitoso',
+          user: {
+            email: ADMIN_USER.email,
+            role: ADMIN_USER.role
+          },
+          token
+        });
+      } else {
+        res.status(401).json({
+          success: false,
+          message: 'Credenciales incorrectas'
+        });
+      }
+    } catch (error) {
+      console.error('Error en login:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor'
       });
     }
+  },
 
-    if (!user.is_active) {
-      return res.status(401).json({
-        error: 'Usuario desactivado'
+  // Verificar token
+  verify: async (req, res) => {
+    try {
+      const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+      
+      if (!token) {
+        return res.status(401).json({
+          success: false,
+          message: 'No autorizado'
+        });
+      }
+
+      const decoded = jwt.verify(token, JWT_SECRET);
+      res.json({
+        success: true,
+        user: {
+          email: decoded.email,
+          role: decoded.role
+        }
+      });
+    } catch (error) {
+      res.status(401).json({
+        success: false,
+        message: 'Token inválido'
       });
     }
+  },
 
-    // Actualizar último login
-    await user.update({
-      last_login: new Date()
-    });
-
-    // Generar token
-    const token = generateToken(user);
-
-    // Responder sin incluir password_hash
-    const { password_hash, ...userData } = user.toJSON();
-
+  // Logout
+  logout: async (req, res) => {
+    res.clearCookie('token');
     res.json({
-      message: 'Login exitoso',
-      user: userData,
-      token
+      success: true,
+      message: 'Logout exitoso'
     });
-  } catch (error) {
-    next(error);
   }
 };
 
-exports.me = async (req, res, next) => {
-  try {
-    const { password_hash, ...userData } = req.user.toJSON();
-    res.json(userData);
-  } catch (error) {
-    next(error);
-  }
-}; 
+module.exports = authController; 

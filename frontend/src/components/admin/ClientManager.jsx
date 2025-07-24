@@ -73,19 +73,19 @@ const ClientManager = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'suspended': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active': return 'bg-primary-500/20 text-primary-400';
+      case 'pending': return 'bg-yellow-500/20 text-yellow-400';
+      case 'suspended': return 'bg-red-500/20 text-red-400';
+      default: return 'bg-tech-700/50 text-tech-400';
     }
   };
 
   const getAccountStatusColor = (status) => {
     switch (status) {
-      case 'active': return 'text-green-600';
-      case 'verifying': return 'text-yellow-600';
-      case 'suspended': return 'text-red-600';
-      default: return 'text-gray-600';
+      case 'active': return 'text-primary-400';
+      case 'verifying': return 'text-yellow-400';
+      case 'suspended': return 'text-red-400';
+      default: return 'text-tech-400';
     }
   };
 
@@ -104,7 +104,7 @@ const ClientManager = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -112,17 +112,17 @@ const ClientManager = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Gestión de Clientes</h1>
-            <p className="text-gray-600">Administra clientes, cuentas y seguimiento</p>
+            <h1 className="text-2xl font-bold text-white">Gestión de Clientes</h1>
+            <p className="text-tech-300">Administra clientes, cuentas y seguimiento</p>
           </div>
           <div className="flex items-center space-x-4">
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-4 py-2 bg-tech-800/50 border border-tech-700/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="all">Todos los clientes</option>
               <option value="active">Clientes activos</option>
@@ -131,10 +131,11 @@ const ClientManager = () => {
             </select>
             <button 
               onClick={() => setShowModal(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl overflow-hidden shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 hover:scale-105"
             >
-              <i className="fas fa-plus mr-2"></i>
-              Nuevo Cliente
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <i className="fas fa-plus relative"></i>
+              <span className="relative font-semibold">Nuevo Cliente</span>
             </button>
           </div>
         </div>
@@ -142,54 +143,54 @@ const ClientManager = () => {
 
       {/* Estadísticas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-blue-100 text-blue-600">
+            <div className="p-3 rounded-xl bg-tech-700/50 text-primary-400">
               <i className="fas fa-users text-xl"></i>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Clientes</p>
-              <p className="text-2xl font-bold text-gray-900">{clients.length}</p>
+              <p className="text-sm font-medium text-tech-300">Total Clientes</p>
+              <p className="text-2xl font-bold text-white">{clients.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-green-100 text-green-600">
+            <div className="p-3 rounded-xl bg-tech-700/50 text-primary-400">
               <i className="fas fa-user-check text-xl"></i>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Clientes Activos</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-tech-300">Clientes Activos</p>
+              <p className="text-2xl font-bold text-white">
                 {clients.filter(c => c.status === 'active').length}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-purple-100 text-purple-600">
+            <div className="p-3 rounded-xl bg-tech-700/50 text-primary-400">
               <i className="fas fa-user-shield text-xl"></i>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Cuentas Totales</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-tech-300">Cuentas Totales</p>
+              <p className="text-2xl font-bold text-white">
                 {clients.reduce((total, client) => total + client.accounts.length, 0)}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl p-6 border border-tech-700/30">
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-orange-100 text-orange-600">
+            <div className="p-3 rounded-xl bg-tech-700/50 text-primary-400">
               <i className="fas fa-dollar-sign text-xl"></i>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Ingresos Totales</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-tech-300">Ingresos Totales</p>
+              <p className="text-2xl font-bold text-white">
                 {formatCurrency(clients.reduce((total, client) => total + client.totalSpent, 0))}
               </p>
             </div>
@@ -198,55 +199,55 @@ const ClientManager = () => {
       </div>
 
       {/* Lista de Clientes */}
-      <div className="bg-white rounded-lg shadow-sm">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Lista de Clientes</h3>
+      <div className="bg-tech-800/30 backdrop-blur-sm rounded-2xl border border-tech-700/30 overflow-hidden">
+        <div className="px-6 py-4 border-b border-tech-700/30">
+          <h3 className="text-lg font-semibold text-white">Lista de Clientes</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-tech-700/30">
+            <thead className="bg-tech-800/50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-tech-300 uppercase tracking-wider">
                   Cliente
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-tech-300 uppercase tracking-wider">
                   Contacto
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-tech-300 uppercase tracking-wider">
                   Cuentas
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-tech-300 uppercase tracking-wider">
                   Estado
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-tech-300 uppercase tracking-wider">
                   Total Gastado
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-tech-300 uppercase tracking-wider">
                   Última Actividad
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-tech-300 uppercase tracking-wider">
                   Acciones
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-tech-700/30">
               {filteredClients.map((client) => (
-                <tr key={client.id} className="hover:bg-gray-50">
+                <tr key={client.id} className="hover:bg-tech-800/50 transition-colors duration-200">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">{client.name}</div>
-                      <div className="text-sm text-gray-500">{client.email}</div>
+                      <div className="text-sm font-medium text-white">{client.name}</div>
+                      <div className="text-sm text-tech-300">{client.email}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{client.phone}</div>
-                    <div className="text-sm text-gray-500">{client.telegram}</div>
+                    <div className="text-sm text-white">{client.phone}</div>
+                    <div className="text-sm text-tech-300">{client.telegram}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="space-y-1">
                       {client.accounts.map((account, index) => (
                         <div key={index} className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-900">{account.type}</span>
+                          <span className="text-sm text-white">{account.type}</span>
                           <span className={`text-xs ${getAccountStatusColor(account.status)}`}>
                             {account.status}
                           </span>
@@ -259,24 +260,24 @@ const ClientManager = () => {
                       {client.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                     {formatCurrency(client.totalSpent)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-tech-300">
                     {new Date(client.lastActivity).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center space-x-2">
                       <button 
                         onClick={() => setSelectedClient(client)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-primary-400 hover:text-primary-500 transition-colors duration-200"
                       >
                         <i className="fas fa-eye"></i>
                       </button>
-                      <button className="text-green-600 hover:text-green-900">
+                      <button className="text-primary-400 hover:text-primary-500 transition-colors duration-200">
                         <i className="fas fa-edit"></i>
                       </button>
-                      <button className="text-red-600 hover:text-red-900">
+                      <button className="text-red-400 hover:text-red-500 transition-colors duration-200">
                         <i className="fas fa-trash"></i>
                       </button>
                     </div>
@@ -290,41 +291,42 @@ const ClientManager = () => {
 
       {/* Modal de Detalles del Cliente */}
       {selectedClient && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-tech-900/80 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-6 border w-[480px] shadow-xl rounded-2xl bg-tech-800/95 border-tech-700/30">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Detalles del Cliente</h3>
+              <h3 className="text-xl font-bold text-white mb-6">Detalles del Cliente</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Nombre</label>
-                  <p className="text-sm text-gray-900">{selectedClient.name}</p>
+                  <label className="block text-sm font-medium text-tech-300">Nombre</label>
+                  <p className="text-base text-white mt-1">{selectedClient.name}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
-                  <p className="text-sm text-gray-900">{selectedClient.email}</p>
+                  <label className="block text-sm font-medium text-tech-300">Email</label>
+                  <p className="text-base text-white mt-1">{selectedClient.email}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Teléfono</label>
-                  <p className="text-sm text-gray-900">{selectedClient.phone}</p>
+                  <label className="block text-sm font-medium text-tech-300">Teléfono</label>
+                  <p className="text-base text-white mt-1">{selectedClient.phone}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Telegram</label>
-                  <p className="text-sm text-gray-900">{selectedClient.telegram}</p>
+                  <label className="block text-sm font-medium text-tech-300">Telegram</label>
+                  <p className="text-base text-white mt-1">{selectedClient.telegram}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Notas</label>
-                  <p className="text-sm text-gray-900">{selectedClient.notes}</p>
+                  <label className="block text-sm font-medium text-tech-300">Notas</label>
+                  <p className="text-base text-white mt-1">{selectedClient.notes}</p>
                 </div>
               </div>
-              <div className="mt-6 flex justify-end space-x-3">
+              <div className="mt-8 flex justify-end space-x-4">
                 <button
                   onClick={() => setSelectedClient(null)}
-                  className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                  className="px-4 py-2 bg-tech-700/50 text-white rounded-xl hover:bg-tech-700/70 transition-colors duration-200"
                 >
                   Cerrar
                 </button>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                  Editar Cliente
+                <button className="group relative inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl overflow-hidden shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 transition-all duration-300 hover:scale-105">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative font-semibold">Editar Cliente</span>
                 </button>
               </div>
             </div>

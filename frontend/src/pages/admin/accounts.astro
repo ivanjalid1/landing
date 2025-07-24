@@ -7,60 +7,89 @@ import ContentEditor from '../../components/admin/ContentEditor.jsx';
   <ContentEditor 
     client:load
     section="accounts"
-    title="Editar Sección de Cuentas Premium"
-    description="Modifica el título, subtítulo y lista de paquetes de cuentas premium"
+    title="Editar Cuentas Premium"
+    description="Modifica los paquetes de cuentas premium disponibles"
     fields={[
       {
         name: 'title',
         label: 'Título de la Sección',
         type: 'text',
-        placeholder: 'Ej: Cuentas Premium Disponibles',
+        placeholder: 'Ej: Cuentas Premium',
         required: true
       },
       {
         name: 'subtitle',
-        label: 'Subtítulo de la Sección',
+        label: 'Subtítulo',
         type: 'textarea',
-        placeholder: 'Descripción general de los paquetes...',
-        rows: 2,
+        placeholder: 'Descripción de las cuentas premium...',
+        rows: 3,
         required: true
       },
       {
-        name: 'accounts',
-        label: 'Lista de Paquetes',
+        name: 'packages',
+        label: 'Paquetes de Cuentas',
         type: 'array',
         itemLabel: 'Paquete',
         template: {
           name: '',
-          price: '',
           description: '',
+          price: '',
           features: [],
-          popular: false
+          popular: false,
+          buttonText: 'Comprar Ahora',
+          buttonLink: '#contact'
         },
         fields: [
           {
             name: 'name',
             label: 'Nombre del Paquete',
             type: 'text',
-            placeholder: 'Ej: Starter Pack'
+            placeholder: 'Ej: Básico, Pro, Enterprise'
+          },
+          {
+            name: 'description',
+            label: 'Descripción',
+            type: 'textarea',
+            placeholder: 'Descripción del paquete...',
+            rows: 3
           },
           {
             name: 'price',
             label: 'Precio',
             type: 'text',
-            placeholder: 'Ej: $99'
-          },
-          {
-            name: 'description',
-            label: 'Descripción del Paquete',
-            type: 'textarea',
-            placeholder: 'Descripción breve del paquete...',
-            rows: 2
+            placeholder: 'Ej: $99/mes o $999/año'
           },
           {
             name: 'popular',
-            label: '¿Es el paquete más popular?',
+            label: 'Paquete Popular',
             type: 'checkbox'
+          },
+          {
+            name: 'buttonText',
+            label: 'Texto del Botón',
+            type: 'text',
+            placeholder: 'Ej: Comprar Ahora'
+          },
+          {
+            name: 'buttonLink',
+            label: 'Enlace del Botón',
+            type: 'text',
+            placeholder: 'Ej: #contact, #servicios, https://t.me/..., o /contacto'
+          },
+          {
+            name: 'features',
+            label: 'Características',
+            type: 'array',
+            itemLabel: 'Característica',
+            template: '',
+            fields: [
+              {
+                name: 'text',
+                label: 'Texto',
+                type: 'text',
+                placeholder: 'Ej: 5 cuentas incluidas'
+              }
+            ]
           }
         ]
       }

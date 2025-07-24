@@ -1,0 +1,181 @@
+/* Animaciones profesionales para la landing page */
+
+/* Loading Screen */
+#loading-screen {
+  backdrop-filter: blur(10px);
+}
+
+/* Keyframes para animaciones */
+@keyframes fadeInDown {
+  from { opacity:0; transform: translateY(-30px); }
+  to { opacity:1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity:0; transform: translateY(30px); }
+  to { opacity:1; transform: translateY(0); }
+}
+
+@keyframes fadeInUpDelayed {
+  0% { opacity:0; transform: translateY(30px); }
+  50% { opacity:0; transform: translateY(30px); }
+  100% { opacity:1; transform: translateY(0); }
+}
+
+@keyframes slideInFromLeft {
+  from { opacity:0; transform: translateX(-50px); }
+  to { opacity:1; transform: translateX(0); }
+}
+
+@keyframes slideInFromRight {
+  from { opacity:0; transform: translateX(50px); }
+  to { opacity:1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity:0; transform: scale(0.9); }
+  to { opacity:1; transform: scale(1); }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Clases de animación */
+.animate-fade-in-down {
+  animation: fadeInDown 0.8s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+.animate-fade-in-up-delayed {
+  animation: fadeInUpDelayed 1.5s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInFromLeft 0.8s ease-out forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInFromRight 0.8s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.6s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Animaciones con delay escalonado */
+.animate-stagger-1 { animation-delay: 0.1s; }
+.animate-stagger-2 { animation-delay: 0.2s; }
+.animate-stagger-3 { animation-delay: 0.3s; }
+.animate-stagger-4 { animation-delay: 0.4s; }
+.animate-stagger-5 { animation-delay: 0.5s; }
+
+/* Efectos de hover mejorados */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Scroll reveal animations */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animaciones para elementos específicos */
+.floating-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-icon:nth-child(2) {
+  animation-delay: 1.5s;
+}
+
+/* Efectos de hover para botones */
+.group:hover .group-hover\:translate-x-1 {
+  transform: translateX(0.25);
+}
+
+/* Transiciones suaves para elementos específicos */
+button, a, .hover-lift, .card-hover, .icon-hover {
+  transition: all 0.3s ease;
+}
+
+/* Animaciones para cards */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Animaciones para iconos */
+.icon-hover {
+  transition: transform 0.3s ease;
+}
+.icon-hover:hover {
+  transform: scale(1.1);
+}
+
+/* Animaciones para texto */
+.text-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+.text-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animaciones para gradientes */
+.gradient-animate {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+} 
+
+/* Asegurar que el header sea siempre visible */
+header {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  z-index: 9998 !important;
+} 

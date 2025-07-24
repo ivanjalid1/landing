@@ -1,24 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const contentController = require('../controllers/contentController');
-const authMiddleware = require('../middleware/auth');
+const { 
+  getContent, 
+  getAllContent, 
+  updateContent, 
+  deleteContent,
+  getSections
+} = require('../controllers/contentController-simple');
+const { auth } = require('../middleware/auth');
 
-// Aplicar middleware de autenticación a todas las rutas
-router.use(authMiddleware);
+// Obtener secciones disponibles
+router.get('/sections', getSections);
 
-// Obtener todas las secciones disponibles
-router.get('/sections', contentController.getSections);
+// Obtener contenido de una sección específica (protegido)
+router.get('/:section', auth, getContent);
 
-// Obtener todo el contenido
-router.get('/', contentController.getAllContent);
+// Obtener todo el contenido (protegido)
+router.get('/', auth, getAllContent);
 
-// Obtener contenido de una sección específica
-router.get('/:section', contentController.getContent);
+// Crear o actualizar contenido de una sección (protegido)
+router.put('/:section', auth, updateContent);
 
-// Crear o actualizar contenido de una sección
-router.put('/:section', contentController.updateContent);
-
-// Eliminar contenido de una sección (soft delete)
-router.delete('/:section', contentController.deleteContent);
+// Eliminar contenido de una sección (protegido)
+router.delete('/:section', auth, deleteContent);
 
 module.exports = router; 

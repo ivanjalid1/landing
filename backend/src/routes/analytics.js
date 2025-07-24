@@ -1,23 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const analyticsController = require('../controllers/analyticsController');
-const authMiddleware = require('../middleware/auth');
-
-// Rutas públicas (sin autenticación)
-router.post('/track', analyticsController.trackEvent);
-router.post('/heatmap', analyticsController.trackHeatmap);
-router.get('/variant/:testId/:sessionId', analyticsController.getVariant);
+const { authMiddleware } = require('../middleware/auth');
 
 // Rutas protegidas (requieren autenticación)
 router.use(authMiddleware);
 
-// Métricas y reportes
-router.get('/metrics', analyticsController.getMetrics);
-router.get('/heatmap', analyticsController.getHeatmapData);
+// Obtener analytics
+router.get('/', analyticsController.getAnalytics);
 
-// Gestión de experimentos A/B
-router.get('/ab-tests', analyticsController.getABTests);
-router.post('/ab-tests', analyticsController.createABTest);
-router.put('/ab-tests/:id', analyticsController.updateABTest);
+// Actualizar analytics
+router.post('/', analyticsController.updateAnalytics);
+
+// Obtener histórico de analytics
+router.get('/historical', analyticsController.getHistoricalAnalytics);
 
 module.exports = router; 
